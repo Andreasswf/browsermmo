@@ -1,0 +1,114 @@
+.b1{
+font-size:60px;
+}
+
+.character_name_text{
+    color:white;
+    font-size:60px;
+}
+
+.slem_text {
+    color:lightblue;
+}
+
+.energi_text {
+    color:darkorange;
+}
+
+.hälsa_text {
+    color:red;
+}
+
+
+.blueText{
+    color:blue;
+}
+
+.redText{
+    color:red;
+}
+
+.large{
+    font-size:60px;
+}
+
+html,body{
+    height:100%;
+    margin:0px;
+}
+
+
+h1{
+    color:black;
+}
+
+.floatLeft{
+    float:left;
+}
+
+.floatRight{
+    float:right;
+}
+.blueText{
+    color:blue;
+}
+
+.redText{
+    color:red;
+}
+
+.large{
+    font-size:60px;
+}
+
+.noMargin{
+    margin:0;
+}
+
+#wrapper{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction: column;
+    margin:auto;
+    border-right:1px solid black;
+    border-left:1px solid black;
+}
+
+#top{
+    height:80px;
+    background:darkkhaki;
+    border-bottom:1px solid black;
+    text-align:center;
+}
+
+#main{
+    background:tan;
+    flex-grow:1;
+    overflow-y:auto;
+    border-bottom:1px solid black;
+    padding:5px;
+    text-align:center;
+}
+
+#center{
+  text-align:center;  
+}
+       
+
+#footer{
+    background:tan;
+    height:30px;
+    text-align:center;
+    line-height:30px;
+}
+
+#accountOptions{
+    /*background:#fafafa;*/
+   
+    
+}
+
+#accountOptions button {
+    width:100%;
+}
