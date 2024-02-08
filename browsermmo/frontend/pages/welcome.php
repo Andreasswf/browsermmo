@@ -1,1 +1,0 @@
-Välkommen till SnigelKraft! 
