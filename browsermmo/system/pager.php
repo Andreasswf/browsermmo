@@ -6,6 +6,7 @@ function getPage(){
         $page = str_replace("..\\", "", $_GET['page']);
         
         include("pages/" . $page . ".php");
+        
         /*
         if ($_GET['page'] === "register"){
             include("pages/register.php");

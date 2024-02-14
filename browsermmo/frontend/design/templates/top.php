@@ -7,7 +7,8 @@
             <a href="?page=profile"><button>Din snigel</button></a>
             <a href="?page=adventures"><button>Äventyr</button></a>
             <a href="?bPage=accountOptions&action=logout&nonUI"><button>Snigelshoppen</button></a>
-            <a href="page=news"><button>Nyheter</button></a>
+            <a href="?page=news"><button>Nyheter</button></a>
+            <a href="?page=news"><button>Topplistan</button></a>
             <a href="?bPage=accountOptions&action=logout&nonUI"><button>Logga ut</button></a>
         </div>
     </div>

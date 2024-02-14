@@ -8,5 +8,5 @@
             </div>
 
             <div id="centeredImage">
-                <img src="https://skadedjursbutiken.se/wp-content/uploads/2021/07/leopardsnigel.jpg" alt="Centered Image">
+                <img src="https://i.postimg.cc/5NdjQZnv/a4acd844-633a-42d4-b7ae-ae8287667779.jpg" alt="Centered Image">
             </div>

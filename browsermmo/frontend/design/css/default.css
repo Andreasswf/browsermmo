@@ -119,5 +119,20 @@ h1{
 }
 
 #accountOptions button {
-    width:15%;
+    width:12.5%;
 }
+
+    .container {
+        width: 300px;
+        padding: 20px;
+        border: 2px solid black;
+        background-color: white;
+    }
+    .bold-text {
+        font-weight: bold;
+        font-size: 24px;
+        text-align: left;
+    }
+    .normal-text {
+        text-align: left;
+    }
