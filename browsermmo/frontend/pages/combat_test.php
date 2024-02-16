@@ -10,9 +10,9 @@ $maxHealth = $result[0]['maxhealth']; // Adjust this according to your database 
 $playerEnergy = $result[0]['energy']; // Adjust this according to your database structure
 $playerMoney = $result[0]['money']; // Adjust this according to your database structure
 $playerXp = $result[0]['xp']; // Adjust this according to your database structure
+$playerAccuracy = $result[0]['accuracy']; // Pricksäkerhet
 
-
-
+// MONSTER BATTLE STARTS
 
 
 if (!isset($_SESSION['monster']['init']) || $_SESSION['monster']['init'] == false || $_SESSION['monster']['hp'] <= 0) {
@@ -35,14 +35,14 @@ if(isset($_POST['attack'])) {
 //DEAL AND TAKE DAMAGE
     
     
-    if($chance_to_hit <= 80 ) {
+    if($chance_to_hit <= $playerAccuracy ) {
         $message .= "<p>Du träffade monstret!</p>";
         $_SESSION['monster']['hp']  -= 1;
     } else {
         $message .= "<p>Du missade!</p>";
     }
     
-    if($monster_attack <= 30 ) {
+    if($monster_attack <= 20 ) {
         $message .= "<p>Monstret slog sedan tillbaka!</p>";
         $playerHealth -= 1;
         // Update health in the database
@@ -98,8 +98,11 @@ if($playerHealth <= 0 ) {
 // Set $hideButtons based on player's health and monster's health
 $hideButtons = ($playerHealth <= 0||$_SESSION['monster']['hp'] <= 0);
 
+
+// MONSTER DEATH
+
 if ($_SESSION['monster']['hp'] <= 0) {
-    $message .= "<p>Du dödade monstret! :D </p>";
+    $message .= "<p>Du dödade monstret! </p>";
 
     // Give the player a random amount of money between 20 and 50
     $moneyGained = rand(20, 50);

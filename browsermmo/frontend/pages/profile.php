@@ -1,48 +1,46 @@
 <?php
-
+// Include the login check script or any other necessary scripts to fetch user data
 include "../util/login_check.php";
 
-
+// Assuming $result is populated with user stats elsewhere in your code
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-.container {
-    width: 200px; /* Set a fixed width for each container */
-    padding: 20px;
-    border: 2px solid black;
-    background-color: white;
-    text-align: center; /* Center the content inside the container */
-    margin: 0 10px; /* Add margin to create spacing between containers */
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            width: 200px;
+            padding: 20px;
+            border: 2px solid black;
+            background-color: white;
+            text-align: center;
+            margin: 0 10px;
+        }
 
-.bold-text {
-    font-weight: bold;
-    font-size: 24px;
-    text-align: center; /* Center the text */
-}
+        .bold-text {
+            font-weight: bold;
+            font-size: 24px;
+            text-align: center;
+        }
 
-.normal-text {
-    text-align: center; /* Center the text */
-}
+        .normal-text {
+            text-align: center;
+        }
 
-/* Flex container for equal-sized containers */
-.flex-container {
-    display: flex;
-    justify-content: center; /* Center the items horizontally */
-}
+        .flex-container {
+            display: flex;
+            justify-content: center;
+        }
 
-/* Clearfix to prevent container overlap */
-.clearfix::after {
-    content: "";
-    display: table;
-    clear: both;
-}
-</style>
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
 </head>
 <body>
 
@@ -56,32 +54,30 @@ include "../util/login_check.php";
         <p class="normal-text">Energi:  <?php echo $result[0]['energy']; ?> / <?php echo $result[0]['maxenergy']; ?> </p>
         <p class="normal-text">Slemstyrka:  <?php echo $result[0]['strength']; ?> </p>
         <p class="normal-text">Pricksäkerhet:  <?php echo $result[0]['accuracy']; ?> </p>
-        <p class="normal-text">Intellekt:  <?php echo $result[0]['defense']; ?> </p>
+        <p class="normal-text">Intellekt:  <?php echo $result[0]['intellect']; ?> </p>
         <p class="normal-text">Kritisk träff:  <?php echo $result[0]['crit']; ?> </p>
     </div>
     
     <div class="container">
         <p class="bold-text">Utrustning: </p>
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p>
+        <?php /* Add PHP code here to display user's equipment */ ?>
     </div>
 
+    
+    
+
+    
     <div class="container">
         <p class="bold-text">Föremål i väskan: </p>
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p> 
-        <p class="normal-text">Tomt </p>
+        <?php
+        // Display the item name retrieved from the query
+        echo "<p class='normal-text'>" . $result[0]['item_name'] . "</p>";
+        
+        // Placeholder for additional item slots (Föremål 2 to Föremål 8)
+        for ($i = 2; $i <= 8; $i++) {
+            echo "<p class='normal-text'>Föremål $i</p>";
+        }
+        ?>
     </div>
 </div>
 

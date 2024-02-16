@@ -1,7 +1,8 @@
 <?php
 
+if(isset($_SESSION['loggedIn'])){
 include "../util/energy_regen.php";
-
+}
 ?>
 
 
