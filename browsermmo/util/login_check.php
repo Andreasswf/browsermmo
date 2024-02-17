@@ -44,8 +44,6 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-//$_SESSION ['money'] = $result [0]
-
        /*echo "<pre>";
 var_dump($result);
 echo "</pre>";

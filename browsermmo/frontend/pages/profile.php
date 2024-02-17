@@ -1,8 +1,9 @@
 <?php
-// Include the login check script or any other necessary scripts to fetch user data
+// Include the login check script or any other necessary scripts to fetch user data like stats etc
 include "../util/login_check.php";
 
-// Assuming $result is populated with user stats elsewhere in your code
+
+
 ?>
 
 <!DOCTYPE html>
@@ -60,25 +61,60 @@ include "../util/login_check.php";
     
     <div class="container">
         <p class="bold-text">Utrustning: </p>
-        <?php /* Add PHP code here to display user's equipment */ ?>
-    </div>
-
-    
-    
-
-    
-    <div class="container">
-        <p class="bold-text">Föremål i väskan: </p>
-        <?php
-        // Display the item name retrieved from the query
-        echo "<p class='normal-text'>" . $result[0]['item_name'] . "</p>";
+  
         
-        // Placeholder for additional item slots (Föremål 2 to Föremål 8)
-        for ($i = 2; $i <= 8; $i++) {
-            echo "<p class='normal-text'>Föremål $i</p>";
-        }
-        ?>
+            <?php
+    // Display the first item
+    echo "<p class='normal-text'>" . $result[0]['item_name']. "</p>";
+    echo "<p class='normal-text'><i>" . $result[0]['item_description'] . "</i></p>";
+    // Add a button for the first item
+    echo '<a href="?page=profile&action=equip&"><button>Ta av</button></a>';
+    
+    // Display additional item slots (Föremål 2 to Föremål 8) with a button
+    for ($i = 2; $i <= 8; $i++) {
+        echo "<p class='normal-text'>Föremål $i</p>";
+        // Add a button next to each item
+        echo '<a href="?page=profile"><button>Ta av</button></a>';
+    }
+    ?>
     </div>
+
+    
+    
+
+<div class="container">
+    <p class="bold-text">Föremål i väskan: </p>
+    <?php
+    // Initialize an array to store items by their slot_id
+    $itemsBySlot = [];
+
+    // Organize items by their slot_id
+    foreach ($result as $item) {
+        $slotId = $item['slot_id'];
+        if (!isset($itemsBySlot[$slotId])) {
+            $itemsBySlot[$slotId] = [];
+        }
+        $itemsBySlot[$slotId][] = [
+            'name' => $item['item_name'],
+            'description' => $item['item_description']
+        ];
+    }
+
+    // Display items in their respective order
+    for ($i = 1; $i <= 8; $i++) {
+        if (isset($itemsBySlot[$i])) {
+            foreach ($itemsBySlot[$i] as $item) {
+                echo "<p class='normal-text'>{$item['name']}</p>";
+                echo "<p class='normal-text'><i>{$item['description']}</i></p>";
+                echo "<a href='?page=profile&action=equip&'><button>Utrusta</button></a>";
+            }
+        }
+    }
+    ?>
+</div>
+
+
+    
 </div>
 
 <div class="clearfix"></div> <!-- Add clearfix to prevent container overlap -->
