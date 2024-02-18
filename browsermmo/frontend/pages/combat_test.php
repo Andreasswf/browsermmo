@@ -2,8 +2,6 @@
 
 include "../util/login_check.php";
 
-                
-
 // Assuming you have fetched the health and max_health values from the database
 $playerHealth = $result[0]['health']; // Adjust this according to your database structure
 $maxHealth = $result[0]['maxhealth']; // Adjust this according to your database structure
@@ -13,28 +11,22 @@ $playerXp = $result[0]['xp']; // Adjust this according to your database structur
 $playerAccuracy = $result[0]['accuracy']; // Pricksäkerhet
 
 // MONSTER BATTLE STARTS
-
-
 if (!isset($_SESSION['monster']['init']) || $_SESSION['monster']['init'] == false || $_SESSION['monster']['hp'] <= 0) {
     $_SESSION['monster']['hp']  = 10;
     $_SESSION['monster']['init'] = true;
     
     $new_energy = $result[0]['energy'] - 1;
-                $sql_update_energy = "UPDATE stats SET energy = $new_energy, lastenergyupdate=NOW() WHERE id = $id";
-                $db->query($sql_update_energy);
-    
+    $sql_update_energy = "UPDATE stats SET energy = $new_energy, lastenergyupdate=NOW() WHERE id = $id";
+    $db->query($sql_update_energy);
 }
+
 $message='';
-
-
 
 if(isset($_POST['attack'])) {
     $chance_to_hit = rand(1, 100); // Generate a random number between 1 and 100
     $monster_attack = rand(1, 100); // Generate a random number between 1 and 100
 
-//DEAL AND TAKE DAMAGE
-    
-    
+    // DEAL AND TAKE DAMAGE
     if($chance_to_hit <= $playerAccuracy ) {
         $message .= "<p>Du träffade monstret!</p>";
         $_SESSION['monster']['hp']  -= 1;
@@ -52,31 +44,26 @@ if(isset($_POST['attack'])) {
         $message .= "<p>Monstret försökte slå tillbaka, men missade!</p>";
     }
     
-    
     // PLAYER DEATH
-if($playerHealth <= 0 ) {
-    $message .= "<p>Du har stupat! Du förlorade några daggdroppar och lite XP! </p>";
-   
-    // Update health in the database
-    $updateHealthSql = "UPDATE stats SET health = $maxHealth WHERE id = '$id'";
-    $db->query($updateHealthSql);
-    $hideButtons = true; // Hide buttons if player's health reaches zero
-    $_SESSION['monster']['init'] = false;
-    
-
-    
-    // Deduct 10% of 'xp' if the player has more than 1 xp
-    $xp = $result[0]['xp'];
-    if ($xp > 1) {
-        $xpLoss = ceil($xp * 0.1); // Calculate the loss
-        $xpLoss = max(1, $xpLoss); // Ensure at least 1 xp loss
-        $newXp = $xp - $xpLoss; // Calculate new xp
-        $updateXpSql = "UPDATE stats SET xp = $newXp WHERE id = '$id'";
-        $db->query($updateXpSql);
+    if($playerHealth <= 0 ) {
+        $message .= "<p>Du har stupat! Du förlorade några daggdroppar och lite XP! </p>";
+       
+        // Update health in the database
+        $updateHealthSql = "UPDATE stats SET health = $maxHealth WHERE id = '$id'";
+        $db->query($updateHealthSql);
+        $hideButtons = true; // Hide buttons if player's health reaches zero
+        $_SESSION['monster']['init'] = false;
         
-
+        // Deduct 10% of 'xp' if the player has more than 1 xp
+        $xp = $result[0]['xp'];
+        if ($xp > 1) {
+            $xpLoss = ceil($xp * 0.1); // Calculate the loss
+            $xpLoss = max(1, $xpLoss); // Ensure at least 1 xp loss
+            $newXp = $xp - $xpLoss; // Calculate new xp
+            $updateXpSql = "UPDATE stats SET xp = $newXp WHERE id = '$id'";
+            $db->query($updateXpSql);
+        }
     }
-}
     
 } elseif(isset($_POST['flee'])) {
     $chance_to_flee = rand(1, 100); // Generate a random number between 1 and 100
@@ -93,14 +80,23 @@ if($playerHealth <= 0 ) {
         $db->query($updateHealthSql);
         $message .= "<p>Du försökte fly, men monstret skadade dig!</p>";
     }
+    
+    // Check if player health reaches 0
+    if($playerHealth <= 0 ) {
+        $message .= "<p>Du har stupat! Du förlorade några daggdroppar och lite XP! </p>";
+       
+        // Update health in the database
+        $updateHealthSql = "UPDATE stats SET health = $maxHealth WHERE id = '$id'";
+        $db->query($updateHealthSql);
+        $hideButtons = true; // Hide buttons if player's health reaches zero
+        $_SESSION['monster']['init'] = false;
+    }
 } 
 
 // Set $hideButtons based on player's health and monster's health
-$hideButtons = ($playerHealth <= 0||$_SESSION['monster']['hp'] <= 0);
-
+$hideButtons = ($playerHealth <= 0 || $_SESSION['monster']['hp'] <= 0);
 
 // MONSTER DEATH
-
 if ($_SESSION['monster']['hp'] <= 0) {
     $message .= "<p>Du dödade monstret! </p>";
 
@@ -115,18 +111,12 @@ if ($_SESSION['monster']['hp'] <= 0) {
     
     // ADD TO THE DATABASE
     
-     $updateMoneySql = "UPDATE stats SET money = $playerMoney WHERE id = '$id'";
-        $db->query($updateMoneySql);
-        
-        $updateXpSql = "UPDATE stats SET xp = $playerXp WHERE id = '$id'";
-        $db->query($updateXpSql);
-        
-        
+    $updateMoneySql = "UPDATE stats SET money = $playerMoney WHERE id = '$id'";
+    $db->query($updateMoneySql);
+    
+    $updateXpSql = "UPDATE stats SET xp = $playerXp WHERE id = '$id'";
+    $db->query($updateXpSql);
 }
-    
-    
-    
-
 
 ?>
 

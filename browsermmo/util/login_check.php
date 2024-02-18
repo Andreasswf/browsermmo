@@ -1,52 +1,76 @@
-<?php 
-
-// Assuming $db is your database connection
+<?php
 global $db;
-
-// Fetch the user's ID from the session
 $id = $_SESSION['loggedIn'];
-
-// SQL query to retrieve user stats, inventory items, and item details
 $sql = "SELECT 
             stats.*, 
-            users.username, 
+            users.username AS user_username,
+            stats.level AS user_level,
+            stats.xp AS user_xp,
+            stats.money AS user_money,
+            stats.health AS user_health,
+            stats.maxhealth AS user_maxhealth,
+            stats.energy AS user_energy,
+            stats.maxenergy AS user_maxenergy,
+            stats.strength AS user_strength,
+            stats.accuracy AS user_accuracy,
+            stats.intellect AS user_intellect,
+            stats.crit AS user_crit,
             playerInventory.*, 
-            item.id AS item_id, 
+            playerEquipment.*,
+            item.item_id, 
             item.name AS item_name, 
-            item.description AS item_description, 
-            item.image AS item_image
+            item.strength AS item_strength,
+            item.maxhealth AS item_maxhealth,
+            item.maxenergy AS item_maxenergy,
+            item.intellect AS item_intellect,
+            item.health AS item_health,
+            item.energy AS item_energy,
+            item.defense AS item_defense,
+            item.crit AS item_crit,
+            item.accuracy AS item_accuracy,
+            item.description AS item_description,
+            item.image AS item_image,
+            item.rarity AS item_rarity
         FROM 
             stats 
-        INNER JOIN 
-            users ON stats.id = users.id 
-        LEFT JOIN 
-            playerInventory ON users.id = playerInventory.user_id
-        LEFT JOIN 
-            item ON playerInventory.item_id = item.id
+            INNER JOIN users ON stats.id = users.id 
+            LEFT JOIN playerInventory ON stats.id = playerInventory.id
+            LEFT JOIN playerEquipment ON stats.id = playerEquipment.id
+            LEFT JOIN item ON (playerEquipment.slot_1 = item.item_id OR 
+                               playerEquipment.slot_2 = item.item_id OR 
+                               playerEquipment.slot_3 = item.item_id OR 
+                               playerEquipment.slot_4 = item.item_id OR 
+                               playerEquipment.slot_5 = item.item_id OR 
+                               playerEquipment.slot_6 = item.item_id OR 
+                               playerEquipment.slot_7 = item.item_id OR 
+                               playerEquipment.slot_8 = item.item_id OR 
+                               playerInventory.slot_1 = item.item_id OR 
+                               playerInventory.slot_2 = item.item_id OR 
+                               playerInventory.slot_3 = item.item_id OR 
+                               playerInventory.slot_4 = item.item_id OR 
+                               playerInventory.slot_5 = item.item_id OR 
+                               playerInventory.slot_6 = item.item_id OR 
+                               playerInventory.slot_7 = item.item_id OR 
+                               playerInventory.slot_8 = item.item_id)  
         WHERE 
-            stats.id = :id";
+            stats.id='$id'";
+$stmt = $db->query($sql);
+$result = $stmt->fetchAll();
 
-// Prepare the SQL statement
-$stmt = $db->prepare($sql);
+$equipment = [];
+$inventory = [];
 
-// Bind the parameter
-$stmt->bindParam(':id', $id, PDO::PARAM_INT);
-
-// Execute the query
-$stmt->execute();
-
-// Fetch the result as an associative array
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Dump the contents of $result for debugging
-// var_dump($result);
-
-
-
-
-       /*echo "<pre>";
-var_dump($result);
-echo "</pre>";
-die;*/
+foreach ($result as $row) {
+    for ($i = 1; $i <= 8; $i++) {
+        $equipmentSlot = "slot_$i";
+        if (!empty($row[$equipmentSlot])) {
+            $equipment[] = $row[$equipmentSlot];
+        }
         
+        $inventorySlot = "slot_$i";
+        if (!empty($row[$inventorySlot])) {
+            $inventory[] = $row[$inventorySlot];
+        }
+    }
+}
 ?>
