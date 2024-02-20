@@ -64,12 +64,12 @@ foreach ($result as $row) {
     for ($i = 1; $i <= 8; $i++) {
         $equipmentSlot = "slot_$i";
         if (!empty($row[$equipmentSlot])) {
-            $equipment[] = $row[$equipmentSlot];
+            $equipment[$equipmentSlot] = $row[$equipmentSlot];
         }
         
         $inventorySlot = "slot_$i";
         if (!empty($row[$inventorySlot])) {
-            $inventory[] = $row[$inventorySlot];
+            $inventory[$inventorySlot] = $row[$inventorySlot];
         }
     }
 }

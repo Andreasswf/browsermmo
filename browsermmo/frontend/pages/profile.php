@@ -1,7 +1,6 @@
 <?php
-
-
 include "../util/login_check.php";
+include "../util/equip_functions.php";
 
 ?>
 
@@ -18,35 +17,13 @@ include "../util/login_check.php";
         align-items: left; /* Center items vertically */
         flex-wrap: wrap; /* Allow items to wrap */
     }
-
-
-    
 </style>
 </head>
 <body>
 
-<?php
-
-
-// Fetch player equipment
-$sqlEquipment = "SELECT * FROM playerEquipment WHERE id = '$id'";
-$stmtEquipment = $db->query($sqlEquipment);
-$resultEquipment = $stmtEquipment->fetch();
-
-// Fetch player inventory
-$sqlInventory = "SELECT * FROM playerInventory WHERE id = '$id'";
-$stmtInventory = $db->query($sqlInventory);
-$resultInventory = $stmtInventory->fetch();
-
-?>
-<?php
-   
-// SHOW USER STATS 
-
-?>
-    
 <div class="flex-container">
     <div class="container">
+        
         <?php if(!empty($result)): ?>
         <p class="bold-text"><?php echo $result[0]['user_username']; ?> </p>
         <p class="normal-text">Level:  <?php echo $result[0]['user_level']; ?> </p> 
@@ -66,21 +43,36 @@ $resultInventory = $stmtInventory->fetch();
     <div class="container">
         <p class="bold-text">Utrustning: </p>
         <div>
-            
             <?php //SHOW USER EQUIPMENT
-            
             if (!empty($resultEquipment)) {
                 for ($i = 1; $i <= 8; $i++) {
                     $equipmentSlot = "slot_$i";
                     $itemId = $resultEquipment[$equipmentSlot];
                     if (!empty($itemId)) {
-                        // Fetch item details from the 'item' table based on item_id
-                        $sqlItem = "SELECT name, description FROM item WHERE item_id = $itemId";
-                        $stmtItem = $db->query($sqlItem);
-                        $itemResult = $stmtItem->fetch();
-                        $itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
-                        $itemDescription = $itemResult ? $itemResult['description'] : "";
-                        echo "<div><p class='normal-text'>$itemName <br> <i>$itemDescription</i></p></div>";
+                        
+// Fetch item details from the 'item' table based on item_id
+$sqlItem = "SELECT * FROM item WHERE item_id = $itemId";
+$stmtItem = $db->query($sqlItem);
+$itemResult = $stmtItem->fetch(PDO::FETCH_ASSOC);
+$itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
+$itemDescription = $itemResult ? $itemResult['description'] : "";
+$itemStrength = $itemResult ? $itemResult['strength'] : "";
+$itemMaxHealth = $itemResult ? $itemResult['maxhealth'] : "";
+$itemMaxEnergy = $itemResult ? $itemResult['maxenergy'] : "";
+$itemIntellect = $itemResult ? $itemResult['intellect'] : "";
+$itemHealth = $itemResult ? $itemResult['health'] : "";
+$itemEnergy = $itemResult ? $itemResult['energy'] : "";
+$itemDefense = $itemResult ? $itemResult['defense'] : "";
+$itemCrit = $itemResult ? $itemResult['crit'] : "";
+$itemAccuracy = $itemResult ? $itemResult['accuracy'] : "";
+
+
+
+                        // Add a button to remove the item
+                        echo "<div><p class='normal-text'>$itemName <br> <i>$itemDescription</i></p>";
+                        echo "<form method='post'>";
+                        echo "<input type='hidden' name='item_id' value='$itemId'>";
+                        echo "<input type='submit' name='remove' value='Ta av'></form></div>";
                     } else {
                         echo "<div><p class='normal-text'>Ledig plats.</p></div>";
                     }
@@ -95,9 +87,7 @@ $resultInventory = $stmtInventory->fetch();
     <div class="container">
         <p class="bold-text">Föremål i väskan: </p>
         <div>
-            
             <?php //SHOW USER INVENTORY
-            
             if (!empty($resultInventory)) {
                 for ($i = 1; $i <= 8; $i++) {
                     $inventorySlot = "slot_$i";
@@ -106,10 +96,15 @@ $resultInventory = $stmtInventory->fetch();
                         // Fetch item details from the 'item' table based on item_id
                         $sqlItem = "SELECT name, description FROM item WHERE item_id = $itemId";
                         $stmtItem = $db->query($sqlItem);
-                        $itemResult = $stmtItem->fetch();
+                        $itemResult = $stmtItem->fetch(PDO::FETCH_ASSOC);
                         $itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
                         $itemDescription = $itemResult ? $itemResult['description'] : "";
-                        echo "<div><p class='normal-text'>$itemName <br> <i>$itemDescription</i></p></div>";
+
+                        // Add a button to equip the item
+                        echo "<div><p class='normal-text'>$itemName <br> <i>$itemDescription</i></p>";
+                        echo "<form method='post'>";
+                        echo "<input type='hidden' name='item_id' value='$itemId'>";
+                        echo "<input type='submit' name='equip' value='Ta på'></form></div>";
                     } else {
                         echo "<div><p class='normal-text'>Ledig plats.</p></div>";
                     }
@@ -117,10 +112,21 @@ $resultInventory = $stmtInventory->fetch();
             } else {
                 echo "<div><p class='normal-text'>No user inventory found.</p></div>";
             }
+            
+            
+
+
+// Echo out the total stats
+echo "<p class='normal-text'>Total Max Energy: $totalMaxEnergy</p>";
+echo "<p class='normal-text'>Total Max Health: $totalMaxHealth</p>";
+echo "<p class='normal-text'>Total Max Accuracy: $totalMaxAccuracy</p>";
+
             ?>
         </div>
     </div>
-
 </div>
 
-
+    
+    
+</body>
+</html>
