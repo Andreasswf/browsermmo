@@ -1,7 +1,15 @@
+<?php
+
+
+include "../util/login_check.php";
+
+?>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Center Text Box</title>
 
 <style>
     .flex-container {
@@ -14,13 +22,10 @@
 
     
 </style>
-
 </head>
 <body>
 
 <?php
-// Include the login check script or any other necessary scripts to fetch user data like stats etc
-include "../util/login_check.php";
 
 
 // Fetch player equipment
@@ -115,6 +120,7 @@ $resultInventory = $stmtInventory->fetch();
             ?>
         </div>
     </div>
- </div>
+
+</div>
 
 
