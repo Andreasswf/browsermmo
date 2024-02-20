@@ -115,7 +115,6 @@ $resultInventory = $stmtInventory->fetch();
             ?>
         </div>
     </div>
-
-
+ </div>
 
 
