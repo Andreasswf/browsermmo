@@ -1,10 +1,33 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        .flex-container {
+            display: flex; /* Use flexbox */
+            justify-content: center; /* Distribute items evenly */
+            align-items: left; /* Center items vertically */
+            flex-wrap: wrap; /* Allow items to wrap */
+        }
+
+        .container {
+            width: 200px; /* Adjust width as needed */
+            margin-bottom: 20px; /* Add some space between containers */
+            padding: 10px;
+            border: 2px solid black;
+            background-color: white;
+        }
+
+
+    </style>
+</head>
+<body>
+
 <?php
 // Include the login check script or any other necessary scripts to fetch user data like stats etc
 include "../util/login_check.php";
 
-// Assuming the database connection is established and $db variable is available
-global $db;
-$id = $_SESSION['loggedIn'];
 
 // Fetch player equipment
 $sqlEquipment = "SELECT * FROM playerEquipment WHERE id = '$id'";
@@ -17,46 +40,12 @@ $stmtInventory = $db->query($sqlInventory);
 $resultInventory = $stmtInventory->fetch();
 
 ?>
+<?php
+   
+// SHOW USER STATS 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        .container {
-            width: 200px;
-            padding: 20px;
-            border: 2px solid black;
-            background-color: white;
-            text-align: center;
-            margin: 0 10px;
-        }
-
-        .bold-text {
-            font-weight: bold;
-            font-size: 24px;
-            text-align: center;
-        }
-
-        .normal-text {
-            text-align: center;
-        }
-
-        .flex-container {
-            display: flex;
-            justify-content: center;
-        }
-
-        .clearfix::after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-    </style>
-</head>
-<body>
-
+?>
+    
 <div class="flex-container">
     <div class="container">
         <?php if(!empty($result)): ?>
@@ -77,8 +66,10 @@ $resultInventory = $stmtInventory->fetch();
 
     <div class="container">
         <p class="bold-text">Utrustning: </p>
-        <ul>
-            <?php
+        <div>
+            
+            <?php //SHOW USER EQUIPMENT
+            
             if (!empty($resultEquipment)) {
                 for ($i = 1; $i <= 8; $i++) {
                     $equipmentSlot = "slot_$i";
@@ -88,24 +79,26 @@ $resultInventory = $stmtInventory->fetch();
                         $sqlItem = "SELECT name, description FROM item WHERE item_id = $itemId";
                         $stmtItem = $db->query($sqlItem);
                         $itemResult = $stmtItem->fetch();
-                        $itemName = $itemResult ? $itemResult['name'] : "ledig plats";
+                        $itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
                         $itemDescription = $itemResult ? $itemResult['description'] : "";
-                        echo "<li>$itemName <br> <i>$itemDescription</i></li>";
+                        echo "<div><p class='normal-text'>$itemName <br> <i>$itemDescription</i></p></div>";
                     } else {
-                        echo "<li>ledig plats</li>";
+                        echo "<div><p class='normal-text'>Ledig plats.</p></div>";
                     }
                 }
             } else {
-                echo "<li>No user equipment found.</li>";
+                echo "<div><p class='normal-text'>No user equipment found.</p></div>";
             }
             ?>
-        </ul>
+        </div>
     </div>
 
     <div class="container">
         <p class="bold-text">Föremål i väskan: </p>
-        <ul>
-            <?php
+        <div>
+            
+            <?php //SHOW USER INVENTORY
+            
             if (!empty($resultInventory)) {
                 for ($i = 1; $i <= 8; $i++) {
                     $inventorySlot = "slot_$i";
@@ -115,22 +108,20 @@ $resultInventory = $stmtInventory->fetch();
                         $sqlItem = "SELECT name, description FROM item WHERE item_id = $itemId";
                         $stmtItem = $db->query($sqlItem);
                         $itemResult = $stmtItem->fetch();
-                        $itemName = $itemResult ? $itemResult['name'] : "ledig plats";
+                        $itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
                         $itemDescription = $itemResult ? $itemResult['description'] : "";
-                        echo "<li>$itemName <br> <i>$itemDescription</i></li>";
+                        echo "<div><p class='normal-text'>$itemName <br> <i>$itemDescription</i></p></div>";
                     } else {
-                        echo "<li>ledig plats</li>";
+                        echo "<div><p class='normal-text'>Ledig plats.</p></div>";
                     }
                 }
             } else {
-                echo "<li>No user inventory found.</li>";
+                echo "<div><p class='normal-text'>No user inventory found.</p></div>";
             }
             ?>
-        </ul>
+        </div>
     </div>
 
-    <div class="clearfix"></div> <!-- Add clearfix to prevent container overlap -->
-</div>
 
-</body>
-</html>
+
+

@@ -14,8 +14,21 @@ function registerAccount($username, $password, $email){
                 
                 // Insert into stats table
                 $stats_sql = "INSERT INTO stats (id, level, xp, money, health, energy, strength, accuracy, defense, intellect, crit, maxhealth, maxenergy) VALUES (?,1,0,10,10,10,10,10,10,10,10,10,10)";
-$stats_stmt = $db->prepare($stats_sql);
-$stats_stmt->execute(array($user_id)); // Corrected to match the number of placeholders
+                $stats_stmt = $db->prepare($stats_sql);
+                $stats_stmt->execute(array($user_id));
+                
+                // Insert into playerInventory table
+                $inventory_sql = "INSERT INTO playerInventory (id, slot_1, slot_2, slot_3, slot_4, slot_5, slot_6, slot_7, slot_8) VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0)";
+                $inventory_stmt = $db->prepare($inventory_sql);
+                $inventory_stmt->execute(array($user_id));
+                
+                // Insert into playerEquipment table
+                $equipment_sql = "INSERT INTO playerEquipment (id, slot_1, slot_2, slot_3, slot_4, slot_5, slot_6, slot_7, slot_8) VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0)";
+                $equipment_stmt = $db->prepare($equipment_sql);
+                $equipment_stmt->execute(array($user_id));
+
+
+
 
   
 
