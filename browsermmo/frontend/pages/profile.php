@@ -3,24 +3,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        .flex-container {
-            display: flex; /* Use flexbox */
-            justify-content: center; /* Distribute items evenly */
-            align-items: left; /* Center items vertically */
-            flex-wrap: wrap; /* Allow items to wrap */
-        }
-
-        .container {
-            width: 200px; /* Adjust width as needed */
-            margin-bottom: 20px; /* Add some space between containers */
-            padding: 10px;
-            border: 2px solid black;
-            background-color: white;
-        }
+<style>
+    .flex-container {
+        display: flex; /* Use flexbox */
+        justify-content: center; /* Distribute items evenly */
+        align-items: left; /* Center items vertically */
+        flex-wrap: wrap; /* Allow items to wrap */
+    }
 
 
-    </style>
+    
+</style>
+
 </head>
 <body>
 

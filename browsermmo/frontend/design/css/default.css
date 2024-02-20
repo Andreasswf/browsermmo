@@ -1,11 +1,13 @@
 .container {
-    width: 300px; /* Adjust width as needed */
-    margin: 0 auto; /* Center horizontally */
-    padding: 20px;
+    width: 200px; /* Adjust width as needed */
+    margin: 10px auto; /* Center horizontally and reduce space between containers */
+    padding: 10px;
     border: 2px solid black;
     background-color: white;
     text-align: center;
 }
+
+
 
 /* Additional styles as needed */
 .bold-text {

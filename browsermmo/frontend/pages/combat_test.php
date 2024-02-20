@@ -136,11 +136,11 @@ if ($_SESSION['monster']['hp'] <= 0) {
     // Give the player a random amount of money between 20 and 50
     $moneyGained = rand(20, 50);
     $playerMoney += $moneyGained;
-    $message .= "<p>Du fick $moneyGained daggdroppar!</p>";
+    
 
     // Give the player 10 XP
     $playerXp += 10;
-    $message .= "<p>Du fick 10 XP!</p>";
+    $message .= "<p>Du fick $moneyGained daggdroppar och 10 XP!</p>";
     
     // ADD TO THE DATABASE
     
