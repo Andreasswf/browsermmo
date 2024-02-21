@@ -1,6 +1,7 @@
 <?php
 
 include "../util/login_check.php";
+include "../util/equip_functions.php";
 
 // Assuming you have fetched the health and max_health values from the database
 $playerHealth = $result[0]['user_health']; // Adjust this according to your database structure
@@ -8,7 +9,7 @@ $maxHealth = $result[0]['user_maxhealth']; // Adjust this according to your data
 $playerEnergy = $result[0]['user_energy']; // Adjust this according to your database structure
 $playerMoney = $result[0]['user_money']; // Adjust this according to your database structure
 $playerXp = $result[0]['xp']; // Adjust this according to your database structure
-$playerAccuracy = $result[0]['user_accuracy']; // Pricksäkerhet
+$playerAccuracy = $totalAccuracy; // Pricksäkerhet
 
 // MONSTER BATTLE STARTS
 if (!isset($_SESSION['monster']['init']) || $_SESSION['monster']['init'] == false || $_SESSION['monster']['hp'] <= 0) {

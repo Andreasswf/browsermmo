@@ -29,10 +29,10 @@ include "../util/equip_functions.php";
         <p class="normal-text">Level:  <?php echo $result[0]['user_level']; ?> </p> 
         <p class="normal-text">XP:  <?php echo $result[0]['user_xp']; ?> </p>
         <p class="normal-text">Daggdroppar:  <?php echo $result[0]['user_money']; ?> </p>
-        <p class="normal-text">Hälsa:  <?php echo $result[0]['user_health']; ?> / <?php echo $result[0]['user_maxhealth']; ?> </p>
-        <p class="normal-text">Energi:  <?php echo $result[0]['user_energy']; ?> / <?php echo $result[0]['user_maxenergy']; ?> </p>
-        <p class="normal-text">Slemstyrka:  <?php echo $result[0]['user_strength']; ?> </p>
-        <p class="normal-text">Pricksäkerhet:  <?php echo $result[0]['user_accuracy']; ?> </p>
+        <p class="normal-text">Hälsa:  <?php echo $result[0]['user_health']; ?> / <?php echo $totalMaxHealth; ?> </p>
+        <p class="normal-text">Energi:  <?php echo $result[0]['user_energy']; ?> / <?php echo $totalMaxEnergy; ?> </p>
+        <p class="normal-text">Slemstyrka:  <?php echo $totalStrength; ?> </p>
+        <p class="normal-text">Pricksäkerhet:  <?php echo $totalAccuracy; ?> </p>
         <p class="normal-text">Intellekt:  <?php echo $result[0]['user_intellect']; ?> </p>
         <p class="normal-text">Kritisk träff:  <?php echo $result[0]['user_crit']; ?> </p>
         <?php else: ?>
@@ -105,6 +105,8 @@ $itemAccuracy = $itemResult ? $itemResult['accuracy'] : "";
                         echo "<form method='post'>";
                         echo "<input type='hidden' name='item_id' value='$itemId'>";
                         echo "<input type='submit' name='equip' value='Ta på'></form></div>";
+                        
+                        
                     } else {
                         echo "<div><p class='normal-text'>Ledig plats.</p></div>";
                     }
@@ -113,13 +115,9 @@ $itemAccuracy = $itemResult ? $itemResult['accuracy'] : "";
                 echo "<div><p class='normal-text'>No user inventory found.</p></div>";
             }
             
-            
 
 
-// Echo out the total stats
-echo "<p class='normal-text'>Total Max Energy: $totalMaxEnergy</p>";
-echo "<p class='normal-text'>Total Max Health: $totalMaxHealth</p>";
-echo "<p class='normal-text'>Total Max Accuracy: $totalMaxAccuracy</p>";
+
 
             ?>
         </div>

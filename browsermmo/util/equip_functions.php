@@ -23,10 +23,11 @@ $sqlInventory = "SELECT * FROM playerInventory WHERE id = '$id'";
 $stmtInventory = $db->query($sqlInventory);
 $resultInventory = $stmtInventory->fetch(PDO::FETCH_ASSOC);
 
-// Initialize a variable to hold the total equipped stats + player stats
+// Initialize a variable to hold the total equipped item stats + player stats
 $totalMaxEnergy = $playerMaxEnergy;
 $totalMaxHealth = $playerMaxHealth;
-$totalMaxAccuracy = $playerAccuracy;
+$totalStrength = $playerStrength;
+$totalAccuracy = $playerAccuracy;
 
 // Loop through all equipment slots
 for ($i = 1; $i <= 8; $i++) {
@@ -42,7 +43,8 @@ for ($i = 1; $i <= 8; $i++) {
     if ($itemResult) {
         $totalMaxEnergy += $itemResult['maxenergy'];
         $totalMaxHealth += $itemResult['maxhealth'];
-        $totalMaxAccuracy += $itemResult['accuracy'];
+        $totalAccuracy += $itemResult['accuracy'];
+        $totalStrength += $itemResult['strength'];
         
     }
 }
@@ -77,6 +79,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
                 $inventoryUpdateQuery = implode(', ', $inventoryUpdate);
                 $db->query("UPDATE playerInventory SET $inventoryUpdateQuery WHERE id = '$id'");
+               
+header("Location: ?page=profile");
+exit;
+
             }
         }
     } elseif(isset($_POST['equip'])) {
@@ -107,9 +113,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
                 $inventoryUpdateQuery = implode(', ', $inventoryUpdate);
                 $db->query("UPDATE playerInventory SET $inventoryUpdateQuery WHERE id = '$id'");
+                               
+header("Location: ?page=profile");
+exit;
+
             }
         }
     }
 }
+
+
+
 ?>
 
