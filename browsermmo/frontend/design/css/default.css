@@ -1,11 +1,17 @@
 .container {
-    width: 200px; /* Adjust width as needed */
-    margin: 10px auto; /* Center horizontally and reduce space between containers */
-    padding: 10px;
+    width: 250px; /* Adjust width as needed */
+    margin: 10px; /* Add space between containers */
+    padding: 5px;
     border: 2px solid black;
     background-color: white;
     text-align: center;
+    height: 700px;
+    display: inline-block; /* Display containers next to each other */
+    vertical-align: top; /* Align containers at the top */
 }
+
+
+
 
 
 

@@ -2,6 +2,7 @@
 
 
 include "../util/login_check.php";
+include "../util/equip_functions.php";
 
 ?>
 
@@ -38,7 +39,7 @@ include "../util/login_check.php";
 
 <div class="text-box">
     <p class="big-text">Den magiska brunnen</p>
-    Du har anlänt till den magiska brunnen. <br> <br>Är du beredd att offra dina hårt förtjänta daggdroppar för chansen att finna ett magiskt föremål? <br>
+    Du har anlänt till den magiska brunnen. <br> <br>Är du beredd att offra dina hårt förtjänta daggdroppar för chansen att finna ett magiskt föremål? <br> <br>
     <button id="wellButton">Offra dagdroppar</button> (Kostar 1000 daggdroppar / föremål). <br>
     
 </div>
@@ -47,24 +48,6 @@ include "../util/login_check.php";
     <img src="https://i.postimg.cc/DzdbrNrj/db1a7d88-43a5-46d8-b1ab-5e9c715c8a93.jpg" alt="Centered Image">
 </div>
 
-<script>
-    document.getElementById("wellButton").addEventListener("click", function() {
-        // Check if money is sufficient
-        <?php if ($result[0]['money'] > 999) { ?>
-            // If energy is more than 999, proceed with the purchase
-            window.location.href = "?page=combat_test";
-            // Deduct 1 from energy in the database
-            <?php
-                $new_money = $result[0]['energy'] - 1000;
-                $sql_update_money = "UPDATE stats SET money = $new_money WHERE id = $id";
-                $db->query($sql_update_energy);
-            ?>
-        <?php } else { ?>
-            // If money is 999 or less, show error message
-            alert("Du har för lite daggdroppar!");
-        <?php } ?>
-    });
-</script>
 
 </body>
 </html>

@@ -8,20 +8,13 @@ include "../util/equip_functions.php";
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Center Text Box</title>
+<title>SnigelKraft</title>
 
-<style>
-    .flex-container {
-        display: flex; /* Use flexbox */
-        justify-content: center; /* Distribute items evenly */
-        align-items: left; /* Center items vertically */
-        flex-wrap: wrap; /* Allow items to wrap */
-    }
-</style>
+
 </head>
 <body>
 
-<div class="flex-container">
+
     <div class="container">
         
         <?php if(!empty($result)): ?>
@@ -69,7 +62,7 @@ $itemAccuracy = $itemResult ? $itemResult['accuracy'] : "";
 
 
                         // Add a button to remove the item
-                        echo "<div><p class='normal-text'>$itemName <br> <i>$itemDescription</i></p>";
+                        echo "<div><p class='normal-text'>$itemName (<i>$itemDescription</i>)</p>";
                         echo "<form method='post'>";
                         echo "<input type='hidden' name='item_id' value='$itemId'>";
                         echo "<input type='submit' name='remove' value='Ta av'></form></div>";
@@ -100,11 +93,16 @@ $itemAccuracy = $itemResult ? $itemResult['accuracy'] : "";
                         $itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
                         $itemDescription = $itemResult ? $itemResult['description'] : "";
 
-                        // Add a button to equip the item
-                        echo "<div><p class='normal-text'>$itemName <br> <i>$itemDescription</i></p>";
-                        echo "<form method='post'>";
-                        echo "<input type='hidden' name='item_id' value='$itemId'>";
-                        echo "<input type='submit' name='equip' value='Ta på'></form></div>";
+                        // BUTTONS FOR EQUIP AND TOSS
+echo "<div><p class='normal-text'>$itemName <i>($itemDescription)</i></p>";
+echo "<form method='post'>";
+echo "<input type='hidden' name='item_id' value='$itemId'>";
+echo "<input type='submit' name='equip' value='Ta på'>";
+echo "&nbsp;"; // Add a non-breaking space for spacing
+echo "<input type='submit' name='toss' value='Släng'>";
+echo "</form></div>";
+
+
                         
                         
                     } else {

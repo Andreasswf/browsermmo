@@ -1,11 +1,8 @@
 <?php
 
-global $db;
-$id = $_SESSION['loggedIn'];
-$sql = "SELECT * FROM stats 
-               WHERE id='$id'";
-$stmt = $db->query($sql);
-$result = $stmt->fetchAll();
+include "../util/login_check.php";
+include "../util/equip_functions.php";
+
 
 /*echo "<pre>";
 var_dump($result);
@@ -21,10 +18,10 @@ $differenceInSeconds = $currentTimestamp - $lastEnergyUpdated;
 $differenceInMinutes = floor ($differenceInSeconds/60);
 
 $energyRegen = 0;
-if($result[0]["energy"] + $differenceInMinutes >= $result[0]["maxenergy"]) {
- $energyRegen = $result[0]["maxenergy"];
+if($playerEnergy + $differenceInMinutes >= $totalMaxEnergy) {
+ $energyRegen = $totalMaxEnergy;
 } else {
- $energyRegen = $result[0]["energy"] + $differenceInMinutes;
+ $energyRegen = $playerEnergy + $differenceInMinutes;
 }
 
 if($energyRegen > 0) {

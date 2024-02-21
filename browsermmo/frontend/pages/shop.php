@@ -18,24 +18,24 @@ if(isset($_POST['heal'])) {
     } elseif ($playerHealth >= $totalMaxHealth) {
         echo ("Din snigel har redan maxhälsa!");
     } else {
-        echo ("Du har för lite daggdroppar!");
+        echo ("Du har för lite daggdroppar! Du har bara $playerMoney daggdroppar!");
     }
 }
 
 if(isset($_POST['energize'])) {
     // Check if player health is less than max health and player money is at least 100
-    if ($playerEnergy < $totalMaxEnergy && $playerMoney >= 100) {
+    if ($playerEnergy < $totalMaxEnergy && $playerMoney >= 200) {
         // Deduct 100 from player money
-        $updatedMoney = $playerMoney - 100;
+        $updatedMoney = $playerMoney - 200;
         // Perform the healing and money deduction
         $updateSql = "UPDATE stats SET energy = $totalMaxEnergy, money = $updatedMoney WHERE id = '$id'";
         $db->query($updateSql);
-        echo ("Du betalade 100 daggdroppar och din snigel blev pigg!");
+        echo ("Du betalade 200 daggdroppar och din snigel blev pigg!");
         
     } elseif ($playerHealth >= $totalMaxEnergy) {
         echo ("Din snigel är redan pigg!");
     } else {
-        echo ("Du har för lite daggdroppar!");
+        echo ("Du har för lite daggdroppar! Du har bara $playerMoney daggdroppar!");
     }
 }
 
