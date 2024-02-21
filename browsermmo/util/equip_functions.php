@@ -1,5 +1,4 @@
 <?php
-
 // Fetching player stats
 $playerHealth = $result[0]['user_health']; // Adjust this according to your database structure
 $playerMaxHealth = $result[0]['user_maxhealth']; // Adjust this according to your database structure
@@ -80,9 +79,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $inventoryUpdateQuery = implode(', ', $inventoryUpdate);
                 $db->query("UPDATE playerInventory SET $inventoryUpdateQuery WHERE id = '$id'");
                
-header("Location: ?page=profile");
-exit;
-
+                // Redirect to the profile page after removing the item
+                header("Location: ?page=profile");
+                exit;
             }
         }
     } elseif(isset($_POST['equip'])) {
@@ -114,15 +113,31 @@ exit;
                 $inventoryUpdateQuery = implode(', ', $inventoryUpdate);
                 $db->query("UPDATE playerInventory SET $inventoryUpdateQuery WHERE id = '$id'");
                                
-header("Location: ?page=profile");
-exit;
-
+                // Redirect to the profile page after equipping the item
+                header("Location: ?page=profile");
+                exit;
             }
+        }
+    } elseif(isset($_POST['toss'])) {
+        $itemId = $_POST['item_id'];
+        // Find the slot in player inventory where the item is stored and set it to 0
+        $slotIndex = array_search($itemId, $resultInventory);
+        if ($slotIndex !== false) {
+            $resultInventory[$slotIndex] = 0;
+            // Update player inventory
+            $inventoryUpdate = [];
+            foreach ($resultInventory as $key => $value) {
+                if ($key !== 'id') {
+                    $inventoryUpdate[] = "`$key` = '$value'";
+                }
+            }
+            $inventoryUpdateQuery = implode(', ', $inventoryUpdate);
+            $db->query("UPDATE playerInventory SET $inventoryUpdateQuery WHERE id = '$id'");
+                           
+            // Redirect to the profile page after tossing the item
+            header("Location: ?page=profile");
+            exit;
         }
     }
 }
-
-
-
 ?>
-

@@ -101,9 +101,7 @@ echo "<input type='submit' name='equip' value='Ta på'>";
 echo "&nbsp;"; // Add a non-breaking space for spacing
 echo "<input type='submit' name='toss' value='Släng'>";
 echo "</form></div>";
-
-
-                        
+                       
                         
                     } else {
                         echo "<div><p class='normal-text'>Ledig plats.</p></div>";
@@ -113,14 +111,9 @@ echo "</form></div>";
                 echo "<div><p class='normal-text'>No user inventory found.</p></div>";
             }
             
-
-
-
-
-            ?>
+           ?>
         </div>
     </div>
-</div>
 
     
     

@@ -32,7 +32,7 @@ if(isset($_POST['energize'])) {
         $db->query($updateSql);
         echo ("Du betalade 200 daggdroppar och din snigel blev pigg!");
         
-    } elseif ($playerHealth >= $totalMaxEnergy) {
+    } elseif ($playerEnergy >= $totalMaxEnergy) {
         echo ("Din snigel är redan pigg!");
     } else {
         echo ("Du har för lite daggdroppar! Du har bara $playerMoney daggdroppar!");
@@ -85,7 +85,9 @@ if(isset($_POST['energize'])) {
 <div class="text-box">
     <form method="post" action="">
         <p class="big-text">Välkommen till snigelshoppen!</p>
-        En mystisk, men samtidigt inbjudande handelsplats. <br> <br> Här kan du köpa föremål för att förbättra din snigel.  Du kan även hela din snigel om den skadats i strid eller vila för att återställa energi. <br> <br>
+        En mystisk, men samtidigt inbjudande handelsplats. <br> <br> Här kan du köpa föremål för att förbättra din snigel.  Du kan även hela din snigel om den skadats i strid eller vila för att återställa energi. <br> 
+        </div> <br>
+    <div class="text-box">
         <input type="submit" name="heal" value="Hela snigel."> Kostar 100 daggdropppar.</input> <br>
         <input type="submit" name="energize" value="Vila under en sten."> Kostar 200 daggdropppar.</input> <br>
     </form>
