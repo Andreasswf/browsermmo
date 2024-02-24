@@ -3,8 +3,15 @@
 include "../util/login_check.php";
 include "../util/equip_functions.php";
 
-// Assuming you have fetched the health and max_health values from the database
-$playerHealth = $result[0]['user_health']; // Adjust this according to your database structure
+function checkLevelUp($currentLevel, $currentXp) {
+    // Define your leveling up logic here
+    // For example, if you want the player to level up when they have double the current level's XP requirement:
+    $xpRequired = pow(2, $currentLevel - 1) * 200; // Adjust the multiplier and base XP as needed
+    return $currentXp >= $xpRequired;
+}
+
+$playerLevel = $result[0]['level']; // Move playerLevel here
+
 $maxHealth = $result[0]['user_maxhealth']; // Adjust this according to your database structure
 $playerEnergy = $result[0]['user_energy']; // Adjust this according to your database structure
 $playerMoney = $result[0]['user_money']; // Adjust this according to your database structure
@@ -50,7 +57,7 @@ if(isset($_POST['attack'])) {
         
        
         // Update health in the database
-        $updateHealthSql = "UPDATE stats SET health = $maxHealth WHERE id = '$id'";
+        $updateHealthSql = "UPDATE stats SET health = $totalMaxHealth WHERE id = '$id'";
         $db->query($updateHealthSql);
         $hideButtons = true; // Hide buttons if player's health reaches zero
         $_SESSION['monster']['init'] = false;
@@ -118,7 +125,7 @@ if(isset($_POST['attack'])) {
                 $message .= "<p>Du har stupat! Du förlorade $xpLoss XP och $moneyLost daggdroppar!</p>";
                 
                 // Update health in the database
-                $updateHealthSql = "UPDATE stats SET health = $maxHealth WHERE id = '$id'";
+                $updateHealthSql = "UPDATE stats SET health = $totalMaxHealth WHERE id = '$id'";
                 $db->query($updateHealthSql);
                 $hideButtons = true; // Hide buttons if player's health reaches zero
                 $_SESSION['monster']['init'] = false;
@@ -142,6 +149,17 @@ if ($_SESSION['monster']['hp'] <= 0) {
     // Give the player 10 XP
     $playerXp += 10;
     $message .= "<p>Du fick $moneyGained daggdroppar och 10 XP!</p>";
+    
+    // Check if the player has enough XP to level up
+    if (checkLevelUp($playerLevel, $playerXp)) {
+        $playerLevel++; // Increment player level
+        
+        // Update player's level in the database
+        $updateLevelSql = "UPDATE stats SET level = $playerLevel WHERE id = '$id'";
+        $db->query($updateLevelSql);
+        
+        $message .= "<p>Grattis! Du har gått upp i nivå till level $playerLevel!</p>";
+    }
     
     // ADD TO THE DATABASE
     
@@ -203,7 +221,7 @@ if ($_SESSION['monster']['hp'] <= 0) {
 <body>
     <!-- HTML code for health bars -->
     <div id="playerHealthBar" class="health-bar">
-        <div id="playerHealthBarInner" class="health-bar-inner" style="width: <?php echo ($playerHealth / $maxHealth) * 100; ?>%;">
+        <div id="playerHealthBarInner" class="health-bar-inner" style="width: <?php echo ($playerHealth / $totalMaxHealth) * 100; ?>%;">
         </div>
         <span class="health-text">Din hälsa: <?php echo $playerHealth; ?></span>
     </div>

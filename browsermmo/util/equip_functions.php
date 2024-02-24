@@ -1,5 +1,6 @@
 <?php
 // Fetching player stats
+$playerLevel = $result[0]['user_level'];
 $playerHealth = $result[0]['user_health']; // Adjust this according to your database structure
 $playerMaxHealth = $result[0]['user_maxhealth']; // Adjust this according to your database structure
 $playerEnergy = $result[0]['user_energy']; // Adjust this according to your database structure
@@ -49,17 +50,22 @@ for ($i = 1; $i <= 8; $i++) {
 }
 
 // Handle form submission
+$message = ""; // Initialize the message variable
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST['remove'])) {
-        $itemId = $_POST['item_id'];
-        // Find the slot in player equipment where the item is stored and set it to 0
-        $slotIndex = array_search($itemId, $resultEquipment);
-        if ($slotIndex !== false) {
-            $resultEquipment[$slotIndex] = 0;
-            // Find the first empty slot in player inventory and set it to the removed item's id
-            $emptySlot = array_search(0, $resultInventory);
-            if ($emptySlot !== false) {
+        // Check if player inventory is full
+        $emptySlot = array_search(0, $resultInventory);
+        if ($emptySlot === false) {
+            $message = "Du har ingen plats i din väska!";
+        } else {
+            $itemId = $_POST['item_id'];
+            // Find the slot in player equipment where the item is stored and set it to 0
+            $slotIndex = array_search($itemId, $resultEquipment);
+            if ($slotIndex !== false) {
+                $resultEquipment[$slotIndex] = 0;
+                // Find the first empty slot in player inventory and set it to the removed item's id
                 $resultInventory[$emptySlot] = $itemId;
+
                 // Update player equipment
                 $equipmentUpdate = [];
                 foreach ($resultEquipment as $key => $value) {
@@ -78,17 +84,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
                 $inventoryUpdateQuery = implode(', ', $inventoryUpdate);
                 $db->query("UPDATE playerInventory SET $inventoryUpdateQuery WHERE id = '$id'");
-               
+
                 // Redirect to the profile page after removing the item
                 header("Location: ?page=profile");
                 exit;
             }
         }
     } elseif(isset($_POST['equip'])) {
-        $itemId = $_POST['item_id'];
-        // Find the first empty slot in player equipment to equip the item
+        // Check if player equipment is full
         $emptySlot = array_search(0, $resultEquipment);
-        if ($emptySlot !== false) {
+        if ($emptySlot === false) {
+            $message = "Du har ingen plats i din utrustning!";
+        } else {
+            $itemId = $_POST['item_id'];
+            // Find the first empty slot in player equipment to equip the item
             $resultEquipment[$emptySlot] = $itemId;
             // Find the slot in player inventory where the item is stored and set it to 0
             $slotIndex = array_search($itemId, $resultInventory);
@@ -112,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
                 $inventoryUpdateQuery = implode(', ', $inventoryUpdate);
                 $db->query("UPDATE playerInventory SET $inventoryUpdateQuery WHERE id = '$id'");
-                               
+
                 // Redirect to the profile page after equipping the item
                 header("Location: ?page=profile");
                 exit;
@@ -133,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             $inventoryUpdateQuery = implode(', ', $inventoryUpdate);
             $db->query("UPDATE playerInventory SET $inventoryUpdateQuery WHERE id = '$id'");
-                           
+
             // Redirect to the profile page after tossing the item
             header("Location: ?page=profile");
             exit;
@@ -141,3 +150,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
