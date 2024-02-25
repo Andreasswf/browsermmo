@@ -23,11 +23,13 @@ $sqlInventory = "SELECT * FROM playerInventory WHERE id = '$id'";
 $stmtInventory = $db->query($sqlInventory);
 $resultInventory = $stmtInventory->fetch(PDO::FETCH_ASSOC);
 
-// Initialize a variable to hold the total equipped item stats + player stats
+// Initialize variables to hold the total equipped item stats + player stats
 $totalMaxEnergy = $playerMaxEnergy;
 $totalMaxHealth = $playerMaxHealth;
 $totalStrength = $playerStrength;
 $totalAccuracy = $playerAccuracy;
+$totalIntellect = $playerIntellect;
+$totalCrit = $playerCrit;
 
 // Loop through all equipment slots
 for ($i = 1; $i <= 8; $i++) {
@@ -39,13 +41,14 @@ for ($i = 1; $i <= 8; $i++) {
     $stmtItem = $db->query($sqlItem);
     $itemResult = $stmtItem->fetch(PDO::FETCH_ASSOC);
     
-    // Add the max energy of the item to the total max energy
+    // Add the max energy of the item to the total equipped value
     if ($itemResult) {
         $totalMaxEnergy += $itemResult['maxenergy'];
         $totalMaxHealth += $itemResult['maxhealth'];
         $totalAccuracy += $itemResult['accuracy'];
         $totalStrength += $itemResult['strength'];
-        
+        $totalIntellect += $itemResult['intellect'];
+        $totalCrit += $itemResult['crit'];
     }
 }
 

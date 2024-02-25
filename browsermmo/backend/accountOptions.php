@@ -13,7 +13,7 @@ function registerAccount($username, $password, $email){
                 $user_id = $db->lastInsertId();
                 
                 // Insert into stats table
-                $stats_sql = "INSERT INTO stats (id, level, xp, money, health, energy, strength, accuracy, defense, intellect, crit, maxhealth, maxenergy) VALUES (?,1,0,10,10,10,10,10,10,10,10,10,10)";
+                $stats_sql = "INSERT INTO stats (id, level, xp, money, health, energy, strength, accuracy, defense, intellect, crit, maxhealth, maxenergy, statpoints) VALUES (?,1,0,10,10,10,10,10,10,10,10,10,10,10)";
                 $stats_stmt = $db->prepare($stats_sql);
                 $stats_stmt->execute(array($user_id));
                 

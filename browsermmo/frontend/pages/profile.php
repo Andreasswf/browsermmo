@@ -2,22 +2,56 @@
 include "../util/login_check.php";
 include "../util/equip_functions.php";
 
+// Check if the form is submitted
+if(isset($_POST['submit'])) {
+    // Retrieve form data
+    $id = $_POST['user_id'];
+    $totalStatPoints = $_POST['total_statpoints'];
+    $maxHealth = $_POST['maxhealth'];
+    $maxEnergy = $_POST['maxenergy'];
+    $strength = $_POST['strength'];
+    $accuracy = $_POST['accuracy'];
+    $intellect = $_POST['intellect'];
+    $crit = $_POST['crit'];
+
+    // Calculate total allocated points
+    $totalAllocatedPoints = $maxHealth + $maxEnergy + $strength + $accuracy + $intellect + $crit;
+
+    // Ensure the total allocated points don't exceed available points
+    if($totalAllocatedPoints <= $totalStatPoints) {
+        // Update user's stats in the database
+        $sql = "UPDATE stats 
+                SET maxhealth = maxhealth + ?, 
+                    maxenergy = maxenergy + ?, 
+                    strength = strength + ?, 
+                    accuracy = accuracy + ?, 
+                    intellect = intellect + ?, 
+                    crit = crit + ? 
+                WHERE id = $id";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$maxHealth, $maxEnergy, $strength, $accuracy, $intellect, $crit]);
+
+        // Update user's remaining stat points
+        $remainingStatPoints = $totalStatPoints - $totalAllocatedPoints;
+        $sqlUpdateStatPoints = "UPDATE stats SET statpoints = ? WHERE id = $id";
+        $stmtUpdateStatPoints = $db->prepare($sqlUpdateStatPoints);
+        $stmtUpdateStatPoints->execute([$remainingStatPoints]);
+        
+        // Redirect or display a success message
+        header("Location: ?page=profile");
+        // exit;
+        $resultMessage = "Stats updated successfully!";
+    } else {
+        $resultMessage = "You cannot allocate more points than available stat points.";
+    }
+}
+
 ?>
 
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SnigelKraft</title>
 
 
-</head>
-<body>
-
-
+<?php if(!empty($result)): ?>
     <div class="container">
-        
-        <?php if(!empty($result)): ?>
         <p class="bold-text"><?php echo $result[0]['user_username']; ?> </p>
         <p class="normal-text">Level:  <?php echo $result[0]['user_level']; ?> </p> 
         <p class="normal-text">XP:  <?php echo $result[0]['user_xp']; ?> </p>
@@ -26,12 +60,67 @@ include "../util/equip_functions.php";
         <p class="normal-text">Energi:  <?php echo $result[0]['user_energy']; ?> / <?php echo $totalMaxEnergy; ?> </p>
         <p class="normal-text">Slemstyrka:  <?php echo $totalStrength; ?> </p>
         <p class="normal-text">Pricksäkerhet:  <?php echo $totalAccuracy; ?> </p>
-        <p class="normal-text">Intellekt:  <?php echo $result[0]['user_intellect']; ?> </p>
-        <p class="normal-text">Kritisk träff:  <?php echo $result[0]['user_crit']; ?> </p>
-        <?php else: ?>
-        <p>No user data found.</p>
-        <?php endif; ?>
+        <p class="normal-text">Intellekt:  <?php echo $totalIntellect; ?> </p>
+        <p class="normal-text">Kritisk träff:  <?php echo $totalCrit; ?> </p>
+        
     </div>
+<?php else: ?>
+    <p>No user data found.</p>
+<?php endif; ?>
+
+<?php if(!empty($result) && $result[0]['user_statpoints'] > 0): ?>
+    <div class="container"> 
+        <h2 id="available-points">Du har poäng att fördela!</h2>
+        <form id="stat-form" method="post" action="">
+            <input type="hidden" name="user_id" value="<?php echo $result[0]['id']; ?>">
+            <input type="hidden" name="total_statpoints" value="<?php echo $result[0]['user_statpoints']; ?>">
+            <label for="maxhealth">Maxhälsa:</label>
+            <input type="number" name="maxhealth" id="maxhealth" value="0" min="0" max="<?php echo $result[0]['user_statpoints']; ?>"><br><br>
+
+            <label for="maxenergy">Maxenergi:</label>
+            <input type="number" name="maxenergy" id="maxenergy" value="0" min="0" max="<?php echo $result[0]['user_statpoints']; ?>"><br><br>
+
+            <label for="strength">Slemstyrka:</label>
+            <input type="number" name="strength" id="strength" value="0" min="0" max="<?php echo $result[0]['user_statpoints']; ?>"><br><br>
+
+            <label for="accuracy">Pricksäkerhet:</label>
+            <input type="number" name="accuracy" id="accuracy" value="0" min="0" max="<?php echo $result[0]['user_statpoints']; ?>"><br><br>
+
+            <label for="intellect">Intellekt:</label>
+            <input type="number" name="intellect" id="intellect" value="0" min="0" max="<?php echo $result[0]['user_statpoints']; ?>"><br><br>
+
+            <label for="crit">Kritisk träff:</label>
+            <input type="number" name="crit" id="crit" value="0" min="0" max="<?php echo $result[0]['user_statpoints']; ?>"><br><br>
+
+            <input type="submit" name="submit" value="Spara">
+        </form>
+        <p id="remaining-points">Återstående statspoäng: <?php echo $result[0]['user_statpoints']; ?></p>
+    </div>
+
+    <script>
+        // JavaScript to update remaining stat points dynamically
+        const totalStatPoints = <?php echo $result[0]['user_statpoints']; ?>;
+        const inputs = document.querySelectorAll('#stat-form input[type="number"]');
+        const remainingPointsElement = document.getElementById('remaining-points');
+
+        function updateRemainingPoints() {
+            let totalAllocatedPoints = 0;
+            inputs.forEach(input => {
+                totalAllocatedPoints += parseInt(input.value);
+            });
+
+            const remainingPoints = totalStatPoints - totalAllocatedPoints;
+            remainingPointsElement.textContent = 'Återstående statspoäng: ' + remainingPoints;
+        }
+
+        inputs.forEach(input => {
+            input.addEventListener('input', updateRemainingPoints);
+        });
+    </script>
+<?php endif; ?>
+
+
+    
 
     <div class="container">
         <p class="bold-text">Utrustning: </p>
@@ -58,11 +147,13 @@ $itemEnergy = $itemResult ? $itemResult['energy'] : "";
 $itemDefense = $itemResult ? $itemResult['defense'] : "";
 $itemCrit = $itemResult ? $itemResult['crit'] : "";
 $itemAccuracy = $itemResult ? $itemResult['accuracy'] : "";
+$itemIntellect = $itemResult ? $itemResult['intellect'] : "";
+$itemCrit = $itemResult ? $itemResult['crit'] : "";
 
 
 
                         // Add a button to remove the item
-                        echo "<div><p class='normal-text'>$itemName (<i>$itemDescription</i>)</p>";
+                        echo "<div><p class='normal-text'>$itemName <i>  ($itemDescription)</i></p>";
                         echo "<form method='post'>";
                         echo "<input type='hidden' name='item_id' value='$itemId'>";
                         echo "<input type='submit' name='remove' value='Ta av'></form></div>";
@@ -94,7 +185,7 @@ $itemAccuracy = $itemResult ? $itemResult['accuracy'] : "";
                         $itemDescription = $itemResult ? $itemResult['description'] : "";
 
                         // BUTTONS FOR EQUIP AND TOSS
-echo "<div><p class='normal-text'>$itemName <i>($itemDescription)</i></p>";
+echo "<div><p class='normal-text'>$itemName <i>  ($itemDescription)</i></p>";
 echo "<form method='post'>";
 echo "<input type='hidden' name='item_id' value='$itemId'>";
 echo "<input type='submit' name='equip' value='Ta på'>";
@@ -115,7 +206,7 @@ echo "</form></div>";
         </div>
     </div>
 
-    
+   
     
 </body>
 </html>

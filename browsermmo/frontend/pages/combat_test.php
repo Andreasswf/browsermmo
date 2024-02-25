@@ -4,9 +4,9 @@ include "../util/login_check.php";
 include "../util/equip_functions.php";
 
 function checkLevelUp($currentLevel, $currentXp) {
-    // Define your leveling up logic here
+    //LEVELING UP LOGIC
     // For example, if you want the player to level up when they have double the current level's XP requirement:
-    $xpRequired = pow(2, $currentLevel - 1) * 200; // Adjust the multiplier and base XP as needed
+    $xpRequired = pow(2, $currentLevel - 1) * 100; // Adjust the multiplier and base XP as needed
     return $currentXp >= $xpRequired;
 }
 
@@ -16,11 +16,13 @@ $maxHealth = $result[0]['user_maxhealth']; // Adjust this according to your data
 $playerEnergy = $result[0]['user_energy']; // Adjust this according to your database structure
 $playerMoney = $result[0]['user_money']; // Adjust this according to your database structure
 $playerXp = $result[0]['xp']; // Adjust this according to your database structure
-$playerAccuracy = $totalAccuracy; // Pricksäkerhet
+$playerAccuracy = $totalAccuracy + 25; // Pricksäkerhet
+$playerDamage = $totalStrength * 0.1;
+$playerCrit = $totalCrit * 0.1;
 
 // MONSTER BATTLE STARTS
 if (!isset($_SESSION['monster']['init']) || $_SESSION['monster']['init'] == false || $_SESSION['monster']['hp'] <= 0) {
-    $_SESSION['monster']['hp']  = 10;
+    $_SESSION['monster']['hp']  = 20;
     $_SESSION['monster']['init'] = true;
     
     $new_energy = $result[0]['energy'] - 1;
@@ -36,8 +38,16 @@ if(isset($_POST['attack'])) {
 
     // DEAL AND TAKE DAMAGE
     if($chance_to_hit <= $playerAccuracy ) {
-        $message .= "<p>Du träffade monstret!</p>";
-        $_SESSION['monster']['hp']  -= 1;
+    $chance_to_crit = rand(1, 100); 
+    $critattack = $chance_to_hit <= $playerCrit;
+    
+       $_SESSION['monster']['hp'] -= round($critattack ? $playerDamage * 2 : $playerDamage);
+       $message .= $critattack ? "<p>Kritisk träff!</p>" : "<p>Du träffade monstret!</p>"; 
+       
+             
+    
+        
+        
     } else {
         $message .= "<p>Du missade!</p>";
     }
@@ -157,8 +167,10 @@ if ($_SESSION['monster']['hp'] <= 0) {
         // Update player's level in the database
         $updateLevelSql = "UPDATE stats SET level = $playerLevel WHERE id = '$id'";
         $db->query($updateLevelSql);
-        
-        $message .= "<p>Grattis! Du har gått upp i nivå till level $playerLevel!</p>";
+        $statpoints = $result[0]['statpoints'] + 10;
+        $updateStatpointsSql = "UPDATE stats SET statpoints = $statpoints WHERE id = '$id'";
+        $db->query($updateStatpointsSql);
+        $message .= "<p>Grattis! Du har nått till nivå $playerLevel och fått 10 statspoäng att fördela fritt!</p>";
     }
     
     // ADD TO THE DATABASE
@@ -227,7 +239,7 @@ if ($_SESSION['monster']['hp'] <= 0) {
     </div>
 
     <div id="monsterHealthBar" class="health-bar">
-        <div id="monsterHealthBarInner" class="health-bar-inner yellow-bar" style="width: <?php echo ($_SESSION['monster']['hp'] / 10) * 100; ?>%;">
+        <div id="monsterHealthBarInner" class="health-bar-inner yellow-bar" style="width: <?php echo ($_SESSION['monster']['hp'] / 20) * 100; ?>%;">
         </div>
         <span class="monster-health-text">Monster: <?php echo $_SESSION['monster']['hp']; ?></span>
     </div>

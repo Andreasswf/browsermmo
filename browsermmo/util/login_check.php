@@ -15,6 +15,7 @@ $sql = "SELECT
             stats.accuracy AS user_accuracy,
             stats.intellect AS user_intellect,
             stats.crit AS user_crit,
+            stats.statpoints AS user_statpoints,
             playerInventory.*, 
             playerEquipment.*,
             item.item_id, 
