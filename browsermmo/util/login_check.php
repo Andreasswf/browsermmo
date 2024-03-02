@@ -72,6 +72,11 @@ foreach ($result as $row) {
         if (!empty($row[$inventorySlot])) {
             $inventory[$inventorySlot] = $row[$inventorySlot];
         }
+        
+        // Add CSS class for items with rarity 'rare'
+        if ($row['item_rarity'] === '1') {
+            echo "<style>.item-name-$i { color: green; }</style>";
+        }
     }
 }
 ?>

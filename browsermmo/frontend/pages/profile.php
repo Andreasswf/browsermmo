@@ -48,12 +48,39 @@ if(isset($_POST['submit'])) {
 
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Title Here</title>
+    <style>
+        .rare-item-name {
+            font-weight: bold;
+            color: darkgreen;
+        }
 
+        .super-rare-item-name {
+            font-weight: bold;
+            color: darkblue;
+        }
+
+        .epic-item-name {
+            font-weight: bold;
+            color: purple;
+        }
+
+        .common-item-name {
+            color: black;
+        }
+    </style>
+</head>
+<body>
 
 <?php if(!empty($result)): ?>
     <div class="container">
         <p class="bold-text"><?php echo $result[0]['user_username']; ?> </p>
-        <p class="normal-text">Level:  <?php echo $result[0]['user_level']; ?> </p> 
+        <p class="normal-text">Nivå:  <?php echo $result[0]['user_level']; ?> </p> 
         <p class="normal-text">XP:  <?php echo $result[0]['user_xp']; ?> </p>
         <p class="normal-text">Daggdroppar:  <?php echo $result[0]['user_money']; ?> </p>
         <p class="normal-text">Hälsa:  <?php echo $result[0]['user_health']; ?> / <?php echo $totalMaxHealth; ?> </p>
@@ -62,7 +89,6 @@ if(isset($_POST['submit'])) {
         <p class="normal-text">Pricksäkerhet:  <?php echo $totalAccuracy; ?> </p>
         <p class="normal-text">Intellekt:  <?php echo $totalIntellect; ?> </p>
         <p class="normal-text">Kritisk träff:  <?php echo $totalCrit; ?> </p>
-        
     </div>
 <?php else: ?>
     <p>No user data found.</p>
@@ -120,93 +146,107 @@ if(isset($_POST['submit'])) {
 <?php endif; ?>
 
 
-    
+<div class="container">
+    <p class="bold-text">Utrustning: </p>
+    <div>
+        <?php // SHOW USER EQUIPMENT
+        if (!empty($resultEquipment)) {
+            for ($i = 1; $i <= 8; $i++) {
+                $equipmentSlot = "slot_$i";
+                $itemId = $resultEquipment[$equipmentSlot];
+                if (!empty($itemId)) {
+                    // Fetch item details from the 'item' table based on item_id
+                    $sqlItem = "SELECT * FROM item WHERE item_id = $itemId";
+                    $stmtItem = $db->query($sqlItem);
+                    $itemResult = $stmtItem->fetch(PDO::FETCH_ASSOC);
+                    $itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
+                    $itemDescription = $itemResult ? $itemResult['description'] : "";
+                    $itemRarity = $itemResult ? $itemResult['rarity'] : "";
 
-    <div class="container">
-        <p class="bold-text">Utrustning: </p>
-        <div>
-            <?php //SHOW USER EQUIPMENT
-            if (!empty($resultEquipment)) {
-                for ($i = 1; $i <= 8; $i++) {
-                    $equipmentSlot = "slot_$i";
-                    $itemId = $resultEquipment[$equipmentSlot];
-                    if (!empty($itemId)) {
-                        
-// Fetch item details from the 'item' table based on item_id
-$sqlItem = "SELECT * FROM item WHERE item_id = $itemId";
-$stmtItem = $db->query($sqlItem);
-$itemResult = $stmtItem->fetch(PDO::FETCH_ASSOC);
-$itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
-$itemDescription = $itemResult ? $itemResult['description'] : "";
-$itemStrength = $itemResult ? $itemResult['strength'] : "";
-$itemMaxHealth = $itemResult ? $itemResult['maxhealth'] : "";
-$itemMaxEnergy = $itemResult ? $itemResult['maxenergy'] : "";
-$itemIntellect = $itemResult ? $itemResult['intellect'] : "";
-$itemHealth = $itemResult ? $itemResult['health'] : "";
-$itemEnergy = $itemResult ? $itemResult['energy'] : "";
-$itemDefense = $itemResult ? $itemResult['defense'] : "";
-$itemCrit = $itemResult ? $itemResult['crit'] : "";
-$itemAccuracy = $itemResult ? $itemResult['accuracy'] : "";
-$itemIntellect = $itemResult ? $itemResult['intellect'] : "";
-$itemCrit = $itemResult ? $itemResult['crit'] : "";
-
-
-
-                        // Add a button to remove the item
-                        echo "<div><p class='normal-text'>$itemName <i>  ($itemDescription)</i></p>";
-                        echo "<form method='post'>";
-                        echo "<input type='hidden' name='item_id' value='$itemId'>";
-                        echo "<input type='submit' name='remove' value='Ta av'></form></div>";
-                    } else {
-                        echo "<div><p class='normal-text'>Ledig plats.</p></div>";
+                    // Apply appropriate class based on rarity
+                    $itemNameClass = '';
+                    switch ($itemRarity) {
+                        case 'rare':
+                            $itemNameClass = 'rare-item-name';
+                            break;
+                        case 'super_rare':
+                            $itemNameClass = 'super-rare-item-name';
+                            break;
+                        case 'epic':
+                            $itemNameClass = 'epic-item-name';
+                            break;
+                        default:
+                            $itemNameClass = 'common-item-name';
+                            break;
                     }
+
+                    // Add a button to remove the item
+                    echo "<div><p><span class='$itemNameClass'>$itemName</span> <i>($itemDescription)</i></p>";
+                    echo "<form method='post'>";
+                    echo "<input type='hidden' name='item_id' value='$itemId'>";
+                    echo "<input type='submit' name='remove' value='Ta av'></form></div>";
+                } else {
+                    echo "<div><p class='normal-text'>Ledig plats.</p></div>";
                 }
-            } else {
-                echo "<div><p class='normal-text'>No user equipment found.</p></div>";
             }
-            ?>
-        </div>
+        } else {
+            echo "<div><p class='normal-text'>No user equipment found.</p></div>";
+        }
+        ?>
     </div>
+</div>
 
-    <div class="container">
-        <p class="bold-text">Föremål i väskan: </p>
-        <div>
-            <?php //SHOW USER INVENTORY
-            if (!empty($resultInventory)) {
-                for ($i = 1; $i <= 8; $i++) {
-                    $inventorySlot = "slot_$i";
-                    $itemId = $resultInventory[$inventorySlot];
-                    if (!empty($itemId)) {
-                        // Fetch item details from the 'item' table based on item_id
-                        $sqlItem = "SELECT name, description FROM item WHERE item_id = $itemId";
-                        $stmtItem = $db->query($sqlItem);
-                        $itemResult = $stmtItem->fetch(PDO::FETCH_ASSOC);
-                        $itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
-                        $itemDescription = $itemResult ? $itemResult['description'] : "";
+<div class="container">
+    <p class="bold-text">Föremål i väskan: </p>
+    <div>
+        <?php // SHOW USER INVENTORY
+        if (!empty($resultInventory)) {
+            for ($i = 1; $i <= 8; $i++) {
+                $inventorySlot = "slot_$i";
+                $itemId = $resultInventory[$inventorySlot];
+                if (!empty($itemId)) {
+                    // Fetch item details from the 'item' table based on item_id
+                    $sqlItem = "SELECT name, description, rarity FROM item WHERE item_id = $itemId";
+                    $stmtItem = $db->query($sqlItem);
+                    $itemResult = $stmtItem->fetch(PDO::FETCH_ASSOC);
+                    $itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
+                    $itemDescription = $itemResult ? $itemResult['description'] : "";
+                    $itemRarity = $itemResult ? $itemResult['rarity'] : "";
 
-                        // BUTTONS FOR EQUIP AND TOSS
-echo "<div><p class='normal-text'>$itemName <i>  ($itemDescription)</i></p>";
-echo "<form method='post'>";
-echo "<input type='hidden' name='item_id' value='$itemId'>";
-echo "<input type='submit' name='equip' value='Ta på'>";
-echo "&nbsp;"; // Add a non-breaking space for spacing
-echo "<input type='submit' name='toss' value='Släng'>";
-echo "</form></div>";
-                       
-                        
-                    } else {
-                        echo "<div><p class='normal-text'>Ledig plats.</p></div>";
+                    // Apply appropriate class based on rarity
+                    $itemNameClass = '';
+                    switch ($itemRarity) {
+                        case 'rare':
+                            $itemNameClass = 'rare-item-name';
+                            break;
+                        case 'super_rare':
+                            $itemNameClass = 'super-rare-item-name';
+                            break;
+                        case 'epic':
+                            $itemNameClass = 'epic-item-name';
+                            break;
+                        default:
+                            $itemNameClass = 'common-item-name';
+                            break;
                     }
-                }
-            } else {
-                echo "<div><p class='normal-text'>No user inventory found.</p></div>";
-            }
-            
-           ?>
-        </div>
-    </div>
 
-   
-    
+                    // BUTTONS FOR EQUIP AND TOSS
+                    echo "<div><p><span class='$itemNameClass'>$itemName</span> <i>($itemDescription)</i></p>";
+                    echo "<form method='post'>";
+                    echo "<input type='hidden' name='item_id' value='$itemId'>";
+                    echo "<input type='submit' name='equip' value='Ta på'>";
+                    echo "&nbsp;"; // Add a non-breaking space for spacing
+                    echo "<input type='submit' name='toss' value='Släng'>";
+                    echo "</form></div>";
+                } else {
+                    echo "<div><p class='normal-text'>Ledig plats.</p></div>";
+                }
+            }
+        } else {
+            echo "<div><p class='normal-text'>No user inventory found.</p></div>";
+        }
+        ?>
+    </div>
+</div>
 </body>
 </html>

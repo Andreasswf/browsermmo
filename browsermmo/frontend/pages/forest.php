@@ -38,8 +38,9 @@ include "../util/login_check.php";
 
 <div class="text-box">
     <p class="big-text">Välkommen till skogen!</p>
-    En tät urskog fylld av mosstäckta stenar och sublima träd. <br> <br> Här kan du bl.a. stöta på andra spelare, slåss mot monster och besöka den magiska brunnen. <br>
-    <button id="fightButton">Slåss mot monster!</button> (Kostar 1 energi). <br>
+    En tät urskog fylld av mosstäckta stenar och sublima träd. <br> <br> Här kan du bl.a. stöta på andra spelare, gå på monsterjakt och besöka den magiska brunnen. <br> <br>
+    <i> Det sägs att djupt inne i skogen finns uråldriga monster som vilar på magiska skatter... <i> <br> <br>
+    <button id="fightButton">Gå på monsterjakt!</button> (Kostar 1 energi). <br>
     <a href="?page=well"><button>Den magiska brunnen</button></a> (1000 daggdroppar för att generera ett slumpat föremål).
 </div>
 
