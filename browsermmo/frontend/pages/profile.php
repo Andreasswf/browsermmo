@@ -1,50 +1,7 @@
 <?php
 include "../util/login_check.php";
+include "../util/update_stats.php"; // Include the new file here
 include "../util/equip_functions.php";
-
-// Check if the form is submitted
-if(isset($_POST['submit'])) {
-    // Retrieve form data
-    $id = $_POST['user_id'];
-    $totalStatPoints = $_POST['total_statpoints'];
-    $maxHealth = $_POST['maxhealth'];
-    $maxEnergy = $_POST['maxenergy'];
-    $strength = $_POST['strength'];
-    $accuracy = $_POST['accuracy'];
-    $intellect = $_POST['intellect'];
-    $crit = $_POST['crit'];
-
-    // Calculate total allocated points
-    $totalAllocatedPoints = $maxHealth + $maxEnergy + $strength + $accuracy + $intellect + $crit;
-
-    // Ensure the total allocated points don't exceed available points
-    if($totalAllocatedPoints <= $totalStatPoints) {
-        // Update user's stats in the database
-        $sql = "UPDATE stats 
-                SET maxhealth = maxhealth + ?, 
-                    maxenergy = maxenergy + ?, 
-                    strength = strength + ?, 
-                    accuracy = accuracy + ?, 
-                    intellect = intellect + ?, 
-                    crit = crit + ? 
-                WHERE id = $id";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([$maxHealth, $maxEnergy, $strength, $accuracy, $intellect, $crit]);
-
-        // Update user's remaining stat points
-        $remainingStatPoints = $totalStatPoints - $totalAllocatedPoints;
-        $sqlUpdateStatPoints = "UPDATE stats SET statpoints = ? WHERE id = $id";
-        $stmtUpdateStatPoints = $db->prepare($sqlUpdateStatPoints);
-        $stmtUpdateStatPoints->execute([$remainingStatPoints]);
-        
-        // Redirect or display a success message
-        header("Location: ?page=profile");
-        // exit;
-        $resultMessage = "Stats updated successfully!";
-    } else {
-        $resultMessage = "You cannot allocate more points than available stat points.";
-    }
-}
 
 ?>
 
@@ -87,6 +44,7 @@ if(isset($_POST['submit'])) {
         <p class="normal-text">Energi:  <?php echo $result[0]['user_energy']; ?> / <?php echo $totalMaxEnergy; ?> </p>
         <p class="normal-text">Slemstyrka:  <?php echo $totalStrength; ?> </p>
         <p class="normal-text">Pricksäkerhet:  <?php echo $totalAccuracy; ?> </p>
+        <p class="normal-text">Smidighet:  <?php echo $totalDefense; ?> </p>
         <p class="normal-text">Intellekt:  <?php echo $totalIntellect; ?> </p>
         <p class="normal-text">Kritisk träff:  <?php echo $totalCrit; ?> </p>
     </div>
@@ -111,6 +69,9 @@ if(isset($_POST['submit'])) {
 
             <label for="accuracy">Pricksäkerhet:</label>
             <input type="number" name="accuracy" id="accuracy" value="0" min="0" max="<?php echo $result[0]['user_statpoints']; ?>"><br><br>
+            
+            <label for="accuracy">Smidighet:</label>
+            <input type="number" name="defense" id="defense" value="0" min="0" max="<?php echo $result[0]['user_statpoints']; ?>"><br><br>
 
             <label for="intellect">Intellekt:</label>
             <input type="number" name="intellect" id="intellect" value="0" min="0" max="<?php echo $result[0]['user_statpoints']; ?>"><br><br>

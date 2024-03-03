@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $playerMoney -= 1000;
                 
                 // Add 1 random item with an id from 1-5 to the first empty slot of the player's inventory
-                $randomItemId = mt_rand(1, 5);
+                $randomItemId = mt_rand(21, 27);
                 
                 // Fetch item name from the 'item' table based on the random item ID
                 $sqlItemName = "SELECT name FROM item WHERE item_id = $randomItemId";
@@ -38,9 +38,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $db->query("UPDATE playerInventory SET $inventoryUpdateQuery WHERE id = '$id'");
 
                 // Message indicating the item obtained
-                $message = "Du slängde ner dina daggdroppar. Efter några sekunder började vattnet i brunnen bubbla. En $itemName sköljdes fram!";
+                $message = "Du slängde ner dina daggdroppar. Efter några sekunder började vattnet i brunnen bubbla. $itemName sköljdes fram!";
             } else {
-                $message = "Du har ingen plats i din väska!";
+                $message = "Du har ingen plats i din väska för $itemName!";
             }
         } else {
             $message = "Du har inte tillräckligt med pengar!";

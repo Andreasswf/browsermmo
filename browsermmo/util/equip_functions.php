@@ -11,6 +11,7 @@ $playerAccuracy = $result[0]['user_accuracy']; // Pricksäkerhet
 $playerIntellect = $result[0]['user_intellect']; // Intellekt
 $playerCrit = $result[0]['user_crit']; // Kritisk träff
 $playerStrength = $result[0]['user_strength']; // Slemstyrka
+$playerDefense = $result[0]['user_defense']; // Smidighet
 
 
 // Fetch player equipment
@@ -30,6 +31,7 @@ $totalStrength = $playerStrength;
 $totalAccuracy = $playerAccuracy;
 $totalIntellect = $playerIntellect;
 $totalCrit = $playerCrit;
+$totalDefense = $playerDefense;
 
 // Loop through all equipment slots
 for ($i = 1; $i <= 8; $i++) {
@@ -49,6 +51,7 @@ for ($i = 1; $i <= 8; $i++) {
         $totalStrength += $itemResult['strength'];
         $totalIntellect += $itemResult['intellect'];
         $totalCrit += $itemResult['crit'];
+        $totalDefense += $itemResult['defense'];
     }
 }
 

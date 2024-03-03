@@ -13,6 +13,7 @@ $sql = "SELECT
             stats.maxenergy AS user_maxenergy,
             stats.strength AS user_strength,
             stats.accuracy AS user_accuracy,
+            stats.defense AS user_defense,
             stats.intellect AS user_intellect,
             stats.crit AS user_crit,
             stats.statpoints AS user_statpoints,
