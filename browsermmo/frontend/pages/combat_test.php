@@ -53,14 +53,14 @@ if (!isset($_SESSION['monster']['init']) || $_SESSION['monster']['init'] == fals
     
     // Echo when a monster is initialized
     echo "";
-    
-    $_SESSION['monster']['hp']  = 10 + ($monsterDifficulty - 1) * 2; // Adjust monster health based on difficulty
+    $monsterMaxHp = 10 + ($monsterDifficulty - 1) * 2;
+    $_SESSION['monster']['hp']  = $monsterMaxHp; // Adjust monster health based on difficulty
     $_SESSION['monster']['damage'] = 1 + ($monsterDifficulty - 1) * 1; // Adjust monster damage based on difficulty
     $_SESSION['monster']['fleeChance'] = 25 - $monsterDifficulty; // Adjust monster flee chance based on difficulty
     
     $_SESSION['monster']['init'] = true;
     
-    $new_energy = $result[0]['energy'] - 1;
+    $new_energy = max($result[0]['energy'] - 1, 0);
     $sql_update_energy = "UPDATE stats SET energy = $new_energy, lastenergyupdate=NOW() WHERE id = $id";
     $db->query($sql_update_energy);
 }
@@ -83,20 +83,24 @@ if(isset($_POST['attack'])) {
         $chance_to_crit = rand(1, 100); 
         $critattack = $chance_to_hit <= $playerCrit;
 
-        $_SESSION['monster']['hp'] -= round($critattack ? $playerDamage * 2 : $playerDamage);
-        $message .= $critattack ? "<p>Kritisk träff!</p>" : "<p>Du träffade $monsterName (nivå $monsterLevel)!</p>"; 
+        $damageDealt = round($critattack ? $playerDamage * 2 : $playerDamage);
+        
+        $_SESSION['monster']['hp'] -= $damageDealt;
+        $message .= $critattack ? "<p>Kritisk träff! Du skadade $damageDealt på $monsterName</p>" : "<p>Du träffade $monsterName (nivå $monsterLevel) och skadade $damageDealt skada på $monsterName!</p>"; 
     } else {
         $message .= "<p>Du missade!</p>";
     }
     
-    if($monster_attack <= 20 + $monsterDifficulty) {
-       $message .= '<p class="monster-hit-text">' . $monsterName . ' (nivå ' . $monsterLevel . ') slog sedan tillbaka!</p>'; 
+    $monsterDamageDealt = $_SESSION['monster']['damage'];
+    
+    if($monster_attack <= 25 + $monsterDifficulty) {
+       $message .= "<p class='monster-hit-text'> $monsterName (nivå $monsterLevel) slog sedan tillbaka och skadade $monsterDamageDealt skada!</p>"; 
         $playerHealth -= $_SESSION['monster']['damage'];
         // Update health in the database
         $updateHealthSql = "UPDATE stats SET health = $playerHealth WHERE id = '$id'";
         $db->query($updateHealthSql);
     } else {
-        $message .= '<p class="monster-action-text">' . $monsterName . ' (nivå ' . $monsterLevel . ') försökte slå tillbaka, men missade!</p>';
+        $message .= "<p class='monster-action-text'> $monsterName (nivå $monsterLevel) försökte slå tillbaka, men missade!</p>";
 
     }
 }
