@@ -2,8 +2,10 @@
 if(isset($_GET['message'])){
     echo $_GET['message'] . "<br>";
 }
-?>
 
+include "../util/login_check.php";
+include "../util/equip_functions.php";
+?>
 
 <html lang="en">
 <head>
@@ -20,34 +22,38 @@ if(isset($_GET['message'])){
         margin: 0;
     }
 
-    .text-box {
-        width: 300px;
-        border: 2px solid black;
-        background-color: white;
-        padding: 10px;
-        margin: auto; /* Center horizontally */
-        text-align: center; /* Center text within the box */
-    }
 
-    .big-text {
-        font-size: 24px;
-    }
 </style>
 </head>
 <body>
 
 <div class="text-box">
     <p class="big-text">Gå på snigeläventyr!</p>
-    <a href="?page=forest"><button>Skogen</button></a>
-    <p><b>Sjön</b> (level 20)</p>
-    <p><b>Bondgården</b> (level 30)</p>
-    <p><b>Grottan</b> (level 40)</p>
-    <p><b>Träsket</b> (level 50)</p>
+    <a href="?page=forest"><button>Skogen</button></a> <br> <br>
+    <button id="lakeButton">Sjön</button> (Kräver nivå 10). <br>
+    <p><b>Bondgården</b> (nivå 20)</p>
+    <p><b>Grottan</b> (nivå 30)</p>
+    <p><b>Träsket</b> (nivå 40)</p>
 </div>
 
                 <div id="centeredImage">
                 <img src="https://i.postimg.cc/90jc2TJD/724ad136-46ef-43f8-806d-01a6387fc8ed.jpg" alt="Centered Image">
             </div>
+    
+    <script>
+    document.getElementById("lakeButton").addEventListener("click", function() {
+        // Check if level is sufficient
+        <?php if ($result[0]['level'] > 9) { ?>
+            // If level is more than 9, proceed with going to lake page
+
+            window.location.href = "?page=lake";
+        <?php } else { ?>
+            // If level is 9 or less, show error message
+            alert("Du är för låg nivå!");
+        <?php } ?>
+    });
+</script>
+    
     
 </body>
 </html>

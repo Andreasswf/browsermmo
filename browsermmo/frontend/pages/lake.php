@@ -34,34 +34,34 @@ include "../util/equip_functions.php";
 <body>
 
 <div class="text-box">
-    <p class="big-text">Välkommen till skogen!</p>
-    En tät urskog fylld av mosstäckta stenar och sublima träd. <br> <br> Här kan du bl.a. stöta på andra spelare, gå på monsterjakt och besöka den magiska brunnen. <br> <br>
-    <i> Det sägs att djupt inne i skogen finns uråldriga monster som bär på magiska skatter... <i> <br> <br>
-    <button id="fightButton">Gå på monsterjakt!</button> (Kostar 1 energi). <br>
-    <a href="?page=well"><button>Den magiska brunnen</button></a> (15000 daggdroppar för att generera ett slumpat föremål).
+    <p class="big-text">Välkommen till sjön!</p>
+    En spegelblank sjö som gränsar till skogen. Här finns även en sandstrand med några enstaka hala stenar. <br> <br> Här kan du bl.a. stöta på andra spelare och gå på monsterjakt vid vattnet! <br> <br> Kanske finns det några hemliga platser att upptäcka? <br> <br>
+    <i> Det sägs att djupt nere på sjöns botten finns uråldriga monster som bär på magiska skatter... <i> <br> <br>
+    <button id="fightButton">Gå på monsterjakt!</button> (Kostar 2 energi). <br>
+   
 </div>
 
 <div id="centeredImage">
-    <img src="https://i.postimg.cc/Z5sw-rnxD/54b42c08-c8c1-41d1-a3c0-586caa8cca3b.jpg" alt="Centered Image">
+    <img src="https://i.postimg.cc/mhx8LG7P/21c89465-d7b1-47e9-9671-15f8b6c3a715.jpg" alt="Centered Image">
 </div>
 
 <script>
     document.getElementById("fightButton").addEventListener("click", function() {
         // Check if energy is sufficient
-        <?php if ($result[0]['energy'] > 0) { ?>
-            // If energy is more than 0, proceed with the fight
+        <?php if ($result[0]['energy'] > 1) { ?>
+            // If energy is more than 2, proceed with the fight
             <?php
             
             // Set monsterDifficulty session variable to 1
             $_SESSION['monsterDifficulty'] = 1;
-                    $new_energy = $playerEnergy - 1;
+                    $new_energy = $playerEnergy - 2;
         $sql_update_energy = "UPDATE stats SET energy = $new_energy, lastenergyupdate=NOW() WHERE id = $id";
         $db->query($sql_update_energy);
         $playerEnergy = $new_energy;
             ?>
-            window.location.href = "?page=combat_forest";
+            window.location.href = "?page=combat_lake";
         <?php } else { ?>
-            // If energy is 0 or less, show error message
+            // If energy is 1 or less, show error message
             alert("Du har för lite energi!");
         <?php } ?>
     });

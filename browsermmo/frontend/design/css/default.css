@@ -1,7 +1,7 @@
 .container {
     width: 250px; /* Adjust width as needed */
-    margin: 10px; /* Add space between containers */
-    padding: 5px;
+    margin: 2px; /* Add space between containers */
+    padding: 0px;
     border: 2px solid black;
     background-color: white;
     text-align: center;
@@ -10,10 +10,49 @@
     vertical-align: top; /* Align containers at the top */
 }
 
+.container2 {
+    width: 300px; /* Adjust width as needed */
+    margin: 2px; /* Add space between containers */
+    padding: 0px;
+    border: 2px solid black;
+    background-color: white;
+    text-align: center;
+    height: 650px;
+    display: inline-block; /* Display containers next to each other */
+    vertical-align: top; /* Align containers at the top */
+}
 
+        .rare-item-name {
+            font-weight: bold;
+            color: darkgreen;
+        }
 
+        .super-rare-item-name {
+            font-weight: bold;
+            color: darkblue;
+        }
 
+        .epic-item-name {
+            font-weight: bold;
+            color: purple;
+        }
 
+        .common-item-name {
+            color: black;
+        }
+
+    .text-box {
+    width: 300px;
+    border: 2px solid black;
+    background-color: white;
+    padding: 10px;
+    margin: 2px auto; /* Center horizontally with 2px margin */
+    text-align: left; /* Center text within the box */
+    }
+
+    .big-text {
+        font-size: 24px;
+    }
 
 .item-name-rare {
     color: green;
@@ -99,7 +138,7 @@ body {
     flex-grow: 1;
     overflow-y: auto;
     border-bottom: 1px solid black;
-    padding: 5px;
+    padding: 0px;
     text-align: center;
 }
 

@@ -12,7 +12,7 @@ $playerIntellect = $result[0]['user_intellect']; // Intellekt
 $playerCrit = $result[0]['user_crit']; // Kritisk träff
 $playerStrength = $result[0]['user_strength']; // Slemstyrka
 $playerDefense = $result[0]['user_defense']; // Smidighet
-
+$playerLevel = $result[0]['level']; // Move playerLevel here
 
 // Fetch player equipment
 $sqlEquipment = "SELECT * FROM playerEquipment WHERE id = '$id'";

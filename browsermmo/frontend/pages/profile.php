@@ -2,35 +2,23 @@
 include "../util/login_check.php";
 include "../util/update_stats.php"; // Include the new file here
 include "../util/equip_functions.php";
+include "../util/levelup_functions.php";
 
 ?>
 
-<!DOCTYPE html>
+
+
+
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Title Here</title>
-    <style>
-        .rare-item-name {
-            font-weight: bold;
-            color: darkgreen;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Center Text Box</title>
 
-        .super-rare-item-name {
-            font-weight: bold;
-            color: darkblue;
-        }
+<style>
 
-        .epic-item-name {
-            font-weight: bold;
-            color: purple;
-        }
-
-        .common-item-name {
-            color: black;
-        }
-    </style>
+</style>
 </head>
 <body>
 
@@ -38,7 +26,7 @@ include "../util/equip_functions.php";
     <div class="container">
         <p class="bold-text"><?php echo $result[0]['user_username']; ?> </p>
         <p class="normal-text">Nivå:  <?php echo $result[0]['user_level']; ?> </p> 
-        <p class="normal-text">XP:  <?php echo $result[0]['user_xp']; ?> </p>
+        <p class="normal-text">XP:  <?php echo $result[0]['user_xp']; ?> / <?php echo $requiredXP; ?> </p>
         <p class="normal-text">Daggdroppar:  <?php echo $result[0]['user_money']; ?> </p>
         <p class="normal-text">Hälsa:  <?php echo $result[0]['user_health']; ?> / <?php echo $totalMaxHealth; ?> </p>
         <p class="normal-text">Energi:  <?php echo $result[0]['user_energy']; ?> / <?php echo $totalMaxEnergy; ?> </p>

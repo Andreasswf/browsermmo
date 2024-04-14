@@ -85,20 +85,19 @@ if(isset($_POST['energize'])) {
 <div class="text-box">
     <form method="post" action="">
         <p class="big-text">Välkommen till snigelshoppen!</p>
-        En mystisk, men samtidigt inbjudande handelsplats. <br> <br> Här kan du köpa föremål för att förbättra din snigel.  Du kan även hela din snigel om den skadats i strid eller vila för att återställa energi. <br> 
-        </div> <br>
-    <div class="text-box">
+        En mystisk, men samtidigt inbjudande handelsplats. <br> <br> På daggmarknaden kan du köpa föremål för att förbättra din snigel. Du kan även hela din snigel om den skadats i strid eller vila för att återställa energi. <br> 
+        <br>
+    
         <input type="submit" name="heal" value="Hela snigel."> Kostar 100 daggdropppar.</input> <br>
-        <input type="submit" name="energize" value="Vila under en sten."> Kostar 200 daggdropppar.</input> <br>
-    </form>
-</div>
+        <input type="submit" name="energize" value="Vila under en sten."> Kostar 200 daggdropppar.</input> 
+            </form>
+<a href="?page=market"><button>Daggmarknaden</button></a> Köp och sälj föremål.
+</div> 
 
 
 <div id="centeredImage">
     <img src="https://i.postimg.cc/x8bwfLrt/06610484-b8ae-4ee6-950b-f35b37a0998d.jpg" alt="Centered Image">
 </div>
-
-
 
 </body>
 </html>

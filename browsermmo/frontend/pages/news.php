@@ -13,14 +13,8 @@
         margin: 0;
     }
 
-    .text-box {
-        width: 300px;
-        border: 2px solid black;
-        background-color: white;
-        padding: 10px;
-        margin: auto; /* Center horizontally */
-        text-align: left; /* Center text within the box */
-    }
+
+    
 
     .big-text {
         font-size: 24px;
@@ -33,6 +27,8 @@
     <p class="big-text">Nyheter:</p>
     Spelet är fortfarande i ett tidigt stadium. Prioriteter: <br>
     1. Göra strids- och levelsystemet mer intressant. <br>
-    2. Lägga till fler monster och föremål. <br> <br> <br>
+    2. Lägga till fler monster och föremål. <br>
+    3. Lägga till fler platser med fler unika funktioner. <br> 
+    4. Implementera trollformler på något sätt.<br><br><br>
     //Roland
 </div>

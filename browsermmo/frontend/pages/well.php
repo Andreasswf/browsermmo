@@ -7,15 +7,15 @@ $message = ""; // Initialize the message variable
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST['well'])) {
         // Check if player has enough money
-        if ($playerMoney >= 1000) {
+        if ($playerMoney >= 15000) {
             // Check if player inventory has an empty slot
             $emptySlot = array_search(0, $resultInventory);
             if ($emptySlot !== false) {
                 // Deduct 1000 money from the player
-                $playerMoney -= 1000;
+                $playerMoney -= 15000;
                 
                 // Add 1 random item with an id from 1-5 to the first empty slot of the player's inventory
-                $randomItemId = mt_rand(21, 27);
+                $randomItemId = mt_rand(39, 45);
                 
                 // Fetch item name from the 'item' table based on the random item ID
                 $sqlItemName = "SELECT name FROM item WHERE item_id = $randomItemId";
@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     Du har anlänt till den magiska brunnen. <br> <br>Är du beredd att offra dina hårt förtjänta daggdroppar för chansen att finna ett magiskt föremål? <br> <br>
     <form method="post">
-        <input type="submit" name="well" value="Släng daggdroppar i brunnen"> <br> Kostar 1000 daggdropppar.
+        <input type="submit" name="well" value="Släng daggdroppar i brunnen"> <br> Kostar 15000 daggdropppar.
     </form>
 </div>
 
