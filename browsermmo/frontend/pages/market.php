@@ -18,14 +18,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $itemId = 5;
     } elseif(isset($_POST['item6'])) {
         $itemId = 6;
-    } elseif(isset($_POST['sell'])) {
-        $itemId = $_POST['item_id'];
+    } elseif(isset($_POST['sell']) && in_array($_POST['item_slot'], AVAILABLE_SLOTS)) {
+        $itemSlot = $_POST['item_slot'];
+        $itemId = $resultInventory[$itemSlot];
         
         // Fetch item price from the 'item' table based on the item ID
         $sqlItemPrice = "SELECT price FROM item WHERE item_id = $itemId";
         $stmtItemPrice = $db->query($sqlItemPrice);
         $itemPriceResult = $stmtItemPrice->fetch(PDO::FETCH_ASSOC);
         $itemPrice = $itemPriceResult['price'];
+        $itemPrice = 10; // @todo: removeme
         
         // Calculate 75% of the item price
         $salePrice = 0.75 * $itemPrice;
@@ -35,20 +37,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Remove the item from the inventory
         $inventorySlot = array_search($itemId, $resultInventory);
+
         if ($inventorySlot !== false) {
             $resultInventory[$inventorySlot] = 0;
 
             // Update player money
-            $db->query("UPDATE stats SET money = '$playerMoney' WHERE id = '$id'");
-            // Update player inventory
-            $inventoryUpdate = [];
-            foreach ($resultInventory as $key => $value) {
-                if ($key !== 'id') {
-                    $inventoryUpdate[] = "`$key` = '$value'";
-                }
-            }
-            $inventoryUpdateQuery = implode(', ', $inventoryUpdate);
-            $db->query("UPDATE playerInventory SET $inventoryUpdateQuery WHERE id = '$id'");
+            $db->query("UPDATE stats SET money = $playerMoney WHERE id = $id");
+            $db->query("UPDATE playerInventory SET $itemSlot = 0 WHERE id = $id");
 
             // Message indicating the item sold
             $sqlItemName = "SELECT name FROM item WHERE item_id = $itemId";
@@ -144,6 +139,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
+function getRarityClass($class) {
+    switch ($class) {
+        case 'rare':
+            return 'rare-item-name';
+        case 'super_rare':
+            return 'super-rare-item-name';
+        case 'epic':
+            return 'epic-item-name';
+        default:
+            return 'common-item-name';
+    }
+}
+
+function getItem($itemId) {
+    global $db;
+
+    $sql = "SELECT * FROM item WHERE item_id = $itemId";
+
+    $stmt = $db->query($sql);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result;
+}
+
+function getSellableItems($resultInventory) {
+    $sellableItems = [];
+
+    foreach($resultInventory as $id => $item) {
+        if(in_array($id, AVAILABLE_SLOTS)) {
+            if($item != 0) {
+                $itemDetails = getItem($item);
+                $sellableItems[$id] = $itemDetails;
+            }
+        }
+    }
+
+    return $sellableItems;
+}
 ?>
 
 <html lang="en">
@@ -203,58 +237,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p class="big-text">Sälj föremål</p>
 
     <div>
-        <?php // SHOW USER INVENTORY
-        if (!empty($resultInventory)) {
-            for ($i = 1; $i <= 8; $i++) {
-                $inventorySlot = "slot_$i";
-                $itemId = $resultInventory[$inventorySlot];
-                if (!empty($itemId)) {
-                    // Fetch item details from the 'item' table based on item_id
-                    $sqlItem = "SELECT name, description, rarity FROM item WHERE item_id = $itemId";
-                    $stmtItem = $db->query($sqlItem);
-                    $itemResult = $stmtItem->fetch(PDO::FETCH_ASSOC);
-                    $itemName = $itemResult ? $itemResult['name'] : "Ledig plats.";
-                    $itemDescription = $itemResult ? $itemResult['description'] : "";
-                    $itemRarity = $itemResult ? $itemResult['rarity'] : "";
+        <?php foreach (getSellableItems($resultInventory) as $slot => $item): ?>
+            <form method="post">
+                <div>
+                    <p>
+                        <span class="<?= getRarityClass($item['rarity']) ?>">
+                            <?= $item['name']; ?> 
+                        </span>
+                        <i>
+                            (<?= $item['description']; ?>)
+                        </i>
+                        <br>
+                        <form method='post'>
+                            <input type='hidden' name='item_slot' value='<?=$slot?>'>
+                            <input type='submit' name='sell' value='Sälj'>
+                        </form>
+                    </p>
+                </div>
+            </form>
+        <?php endforeach; ?>
 
-                    // Apply appropriate class based on rarity
-                    $itemNameClass = '';
-                    switch ($itemRarity) {
-                        case 'rare':
-                            $itemNameClass = 'rare-item-name';
-                            break;
-                        case 'super_rare':
-                            $itemNameClass = 'super-rare-item-name';
-                            break;
-                        case 'epic':
-                            $itemNameClass = 'epic-item-name';
-                            break;
-                        default:
-                            $itemNameClass = 'common-item-name';
-                            break;
-                    }
-
-                    // Display item with description and sell button
-                    echo "<div><p><span class='$itemNameClass'>$itemName</span> <i>($itemDescription)</i></p>";
-                    echo "<form method='post'>";
-                    echo "<input type='hidden' name='item_id' value='$itemId'>";
-                    echo "<input type='submit' name='sell' value='Sälj'>";
-                    echo "</form></div>";
-                } else {
-                    // Display empty slot
-                    echo "<div><p class='normal-text'>Ledig plats.</p></div>";
-                }
-            }
-        } else {
-            echo "<div><p class='normal-text'>Inget användarinventarium hittades.</p></div>";
-        }
-        ?>
+        <?php if (empty($resultInventory)): ?>
+            <div><p class='normal-text'>Inget användarinventarium hittades.</p></div>
+        <?php endif; ?>
     </div>
 
     <!-- Message Display Section -->
    
-        
-    
 </div>
     <div class="text-box">
     

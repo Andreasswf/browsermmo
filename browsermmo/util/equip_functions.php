@@ -33,6 +33,8 @@ $totalIntellect = $playerIntellect;
 $totalCrit = $playerCrit;
 $totalDefense = $playerDefense;
 
+const AVAILABLE_SLOTS = ['slot_1', 'slot_2', 'slot_3', 'slot_4', 'slot_5', 'slot_6', 'slot_7', 'slot_8'];
+
 // Loop through all equipment slots
 for ($i = 1; $i <= 8; $i++) {
     $equipmentSlot = "slot_$i";
