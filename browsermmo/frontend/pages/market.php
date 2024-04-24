@@ -27,7 +27,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtItemPrice = $db->query($sqlItemPrice);
         $itemPriceResult = $stmtItemPrice->fetch(PDO::FETCH_ASSOC);
         $itemPrice = $itemPriceResult['price'];
-        $itemPrice = 10; // @todo: removeme
         
         // Calculate 75% of the item price
         $salePrice = 0.75 * $itemPrice;
